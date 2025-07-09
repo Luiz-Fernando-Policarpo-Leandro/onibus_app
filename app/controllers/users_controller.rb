@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       flash[:success] = "Bem-vindo ao app, #{@user.email}!"
       redirect_to root_path # Redireciona para a página inicial
     else
-      render 'new', status: :unprocessable_entity
+      render "new", status: :unprocessable_entity
     end
   end
 
