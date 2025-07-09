@@ -1,4 +1,5 @@
 class OnibusesController < ApplicationController
+  before_action :require_user, except: [ :home ]
   before_action :set_onibus, only: %i[ show edit update destroy ]
 
   def home

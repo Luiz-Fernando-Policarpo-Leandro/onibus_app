@@ -1,4 +1,3 @@
-# app/controllers/users_controller.rb
 class UsersController < ApplicationController
   def new
     @user = User.new
@@ -6,6 +5,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.status = Status.find_by(name: "waiting") # define estatus como "waiting"
+    @user.build_verification(code_verification: SecureRandom.hex(4))
+
     if @user.save
       session[:user_id] = @user.id # o usuário é logado após o registro
       flash[:success] = "Bem-vindo ao app, #{@user.email}!"
