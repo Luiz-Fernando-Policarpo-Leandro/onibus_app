@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @onibus %>
+
+<div>
+  <%= link_to "Edit this onibus", edit_onibus_path(@onibus) %> |
+  <%= link_to "Back to onibuses", onibuses_path %>
+
+  <%= button_to "Destroy this onibus", @onibus, method: :delete %>
+</div>

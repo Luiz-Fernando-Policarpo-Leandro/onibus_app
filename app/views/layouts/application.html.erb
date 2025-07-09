@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meu App Autenticação</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body>
+  <% flash.each do |message_type, message| %>
+    <div class="flash <%= message_type %>">
+      <%= message %>
+    </div>
+  <% end %>
+
+  <%= yield %>
+</body>
+</html>

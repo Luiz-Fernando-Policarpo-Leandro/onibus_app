@@ -1,0 +1,2 @@
+class Onibus < ApplicationRecord
+end

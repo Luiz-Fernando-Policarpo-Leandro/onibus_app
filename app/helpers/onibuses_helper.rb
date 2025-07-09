@@ -1,0 +1,2 @@
+module OnibusesHelper
+end
