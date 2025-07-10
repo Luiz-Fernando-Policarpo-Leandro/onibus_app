@@ -60,10 +60,12 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:8.0 # Sua versão 8.0.33 se encaixa perfeitamente aqui
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: onibus_app_test 
+          # É crucial que esta variável de ambiente do serviço MySQL seja definida
+          # O valor real da senha virá do GitHub Secret.
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }} 
+          MYSQL_DATABASE: onibus_app_test
         ports:
           - "3306:3306"
         options: >-
@@ -89,14 +91,7 @@ jobs:
 
       - name: Configure database.yml for CI
         run: |
-          # Remove a linha do 'socket' e adiciona 'host' para o ambiente de CI
-          # Cria um backup do original por segurança
-          mv config/database.yml config/database.yml.bak
-
-          # Reconstroi o database.yml focando nas configs de CI
-          # Usaremos a mesma estrutura do seu original, mas injetando host e port
-          # e garantindo que as variáveis ENV_NAME_DATABASE e ENV_PASSWORD_DATABASE
-          # sejam definidas nos 'env' dos steps
+          # Reconstroi o database.yml focando nas configs de CI, usando host e port
           cat << EOF > config/database.yml
           default: &default
             adapter: mysql2
@@ -104,8 +99,6 @@ jobs:
             pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
             username: <%= ENV["ENV_NAME_DATABASE"] %>
             password: <%= ENV["ENV_PASSWORD_DATABASE"] %>
-            # No CI, conectamos via host/port, não socket.
-            # O host é 127.0.0.1 porque o serviço MySQL está rodando no mesmo host da VM do Actions.
             host: 127.0.0.1
             port: 3306
 
@@ -136,27 +129,31 @@ jobs:
               database: onibus_app_production_cable
               migrations_paths: db/cable_migrate
           EOF
+        env:
+          # Para este step, definimos as variáveis que o Rails usará para o database.yml
+          ENV_NAME_DATABASE: root
+          ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }} # A senha do root do MySQL
 
       - name: Wait for MySQL to be ready ⏳
         run: |
-          sudo apt-get install -y mysql-client # Instala o cliente MySQL para o comando 'mysql'
+          sudo apt-get install -y mysql-client
+          # O comando mysql espera as credenciais via -u e -p
           until mysql -h 127.0.0.1 -P 3306 -u "${ENV_NAME_DATABASE}" -p"${ENV_PASSWORD_DATABASE}" -e "SELECT 1"; do
             echo "Waiting for MySQL service..."
             sleep 5
           done
           echo "MySQL is up and running!"
         env:
-
-          ENV_NAME_DATABASE: root 
+          # As variáveis de ambiente que o comando 'mysql' usará
+          ENV_NAME_DATABASE: root
           ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-
-          MYSQL_ROOT_PASSWORD: ${{ services.mysql.env.ENV_PASSWORD_DATABASE }}
 
       - name: Create and Migrate Test Database 💾
         run: |
           bin/rails db:test:prepare
         env:
           RAILS_ENV: test
+          # As variáveis de ambiente que o Rails usará para a conexão com o DB de teste
           ENV_NAME_DATABASE: root
           ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
@@ -164,7 +161,7 @@ jobs:
         run: bundle exec rspec
         env:
           RAILS_ENV: test
-          
+          # As variáveis de ambiente que o RSpec/Rails usará para a conexão com o DB de teste
           ENV_NAME_DATABASE: root
           ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
