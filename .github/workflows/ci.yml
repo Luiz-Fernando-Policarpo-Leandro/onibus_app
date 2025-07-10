@@ -127,7 +127,7 @@ jobs:
           done
           echo "MySQL is up and running!"
         env:
-          MYSQL_ROOT_PASSWORD: ${{ services.mysql.env.MYSQL_ROOT_PASSWORD }} # Passa a senha do serviço
+          MYSQL_ROOT_PASSWORD: ${{ services.mysql.env.ENV_PASSWORD_DATABASE }}
 
       - name: Create and Migrate Test Database 💾
         run: |
