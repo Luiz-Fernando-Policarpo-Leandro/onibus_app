@@ -60,25 +60,23 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0 # É crucial especificar a versão, use a que você usa localmente (ex: mysql:8.0)
+        image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: "" # Sua senha de root. Se você tem uma, coloque-a aqui.
-                                  # Se for vazia como no seu CI, use aspas vazias.
-          MYSQL_DATABASE: onibus_app_test # Nome do seu banco de dados de TESTE
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: onibus_app_test 
         ports:
           - "3306:3306"
-        options: >- # Usado para múltiplas opções em uma linha
+        options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -p${MYSQL_ROOT_PASSWORD}"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10 # Aumentei o retries para dar mais tempo ao MySQL
+          --health-retries=10
 
     steps:
       - name: Install apt packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y default-libmysqlclient-dev build-essential git pkg-config google-chrome-stable # Adicionado build-essential e pkg-config
-                                                                                                                   # para algumas gems nativas
+          sudo apt-get install -y default-libmysqlclient-dev build-essential git pkg-config google-chrome-stable
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -91,57 +89,81 @@ jobs:
 
       - name: Configure database.yml for CI
         run: |
-          # Criar ou ajustar o database.yml para o ambiente de CI
-          # Esta é uma forma genérica. Adapte-a ao seu database.yml real!
-          # Certifique-se que a seção 'test:' do seu database.yml aponte para:
-          #   host: 127.0.0.1
-          #   username: root
-          #   password:
-          #   database: onibus_app_test
+          # Remove a linha do 'socket' e adiciona 'host' para o ambiente de CI
+          # Cria um backup do original por segurança
+          mv config/database.yml config/database.yml.bak
+
+          # Reconstroi o database.yml focando nas configs de CI
+          # Usaremos a mesma estrutura do seu original, mas injetando host e port
+          # e garantindo que as variáveis ENV_NAME_DATABASE e ENV_PASSWORD_DATABASE
+          # sejam definidas nos 'env' dos steps
           cat << EOF > config/database.yml
           default: &default
             adapter: mysql2
             encoding: utf8mb4
             pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-            username: root
-            password: <%= ENV['MYSQL_ROOT_PASSWORD'] %>
-            host: 127.0.0.1 # O host deve ser 127.0.0.1 para acessar o serviço MySQL
+            username: <%= ENV["ENV_NAME_DATABASE"] %>
+            password: <%= ENV["ENV_PASSWORD_DATABASE"] %>
+            # No CI, conectamos via host/port, não socket.
+            # O host é 127.0.0.1 porque o serviço MySQL está rodando no mesmo host da VM do Actions.
+            host: 127.0.0.1
             port: 3306
 
           development:
             <<: *default
-            database: onibus_app_development # Use o nome do seu banco de dev
+            database: onibus_app_development
 
           test:
             <<: *default
-            database: onibus_app_test # O nome do banco de dados de teste
+            database: onibus_app_test
+
+          production:
+            primary: &primary_production
+              <<: *default
+              database: onibus_app_production
+              username: onibus_app
+              password: <%= ENV["ONIBUS_APP_DATABASE_PASSWORD"] %>
+            cache:
+              <<: *primary_production
+              database: onibus_app_production_cache
+              migrations_paths: db/cache_migrate
+            queue:
+              <<: *primary_production
+              database: onibus_app_production_queue
+              migrations_paths: db/queue_migrate
+            cable:
+              <<: *primary_production
+              database: onibus_app_production_cable
+              migrations_paths: db/cable_migrate
           EOF
 
       - name: Wait for MySQL to be ready ⏳
-        # Tenta conectar ao MySQL até que esteja disponível
         run: |
           sudo apt-get install -y mysql-client # Instala o cliente MySQL para o comando 'mysql'
-          until mysql -h 127.0.0.1 -P 3306 -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SELECT 1"; do
+          until mysql -h 127.0.0.1 -P 3306 -u "${ENV_NAME_DATABASE}" -p"${ENV_PASSWORD_DATABASE}" -e "SELECT 1"; do
             echo "Waiting for MySQL service..."
             sleep 5
           done
           echo "MySQL is up and running!"
         env:
-          MYSQL_ROOT_PASSWORD: ${{ services.mysql.env.MYSQL_ROOT_PASSWORD }} # Passa a senha do serviço
+          ENV_NAME_DATABASE: root 
+          ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
       - name: Create and Migrate Test Database 💾
         run: |
-          # Use db:test:prepare para criar o banco de dados de teste e rodar as migrações
           bin/rails db:test:prepare
         env:
           RAILS_ENV: test
-          # DATABASE_URL: mysql2://root:${{ services.mysql.env.MYSQL_ROOT_PASSWORD }}@127.0.0.1:3306/onibus_app_test # Opcional se database.yml estiver corret
+          ENV_NAME_DATABASE: root
+          ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
       - name: Run RSpec tests 🚀
         run: bundle exec rspec
         env:
           RAILS_ENV: test
-          # DATABASE_URL: mysql2://root:${{ services.mysql.env.MYSQL_ROOT_PASSWORD }}@127.0.0.1:3306/onibus_app_test # Opcional
+          
+          ENV_NAME_DATABASE: root
+          ENV_PASSWORD_DATABASE: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
@@ -149,4 +171,4 @@ jobs:
         with:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore # Continuar mesmo se não houver screenshots
+          if-no-files-found: ignore
