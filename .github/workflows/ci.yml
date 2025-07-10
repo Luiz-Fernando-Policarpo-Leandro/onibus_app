@@ -6,9 +6,9 @@ on:
     branches: [ main ]
 
 jobs:
+  # Job para varredura de segurança Ruby (Brakeman)
   scan_ruby:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,9 +22,9 @@ jobs:
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
 
+  # Job para varredura de segurança JavaScript (Importmap)
   scan_js:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,6 +38,7 @@ jobs:
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
 
+  # Job para linting de código (Rubocop)
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -53,27 +54,31 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  # Job principal para execução dos testes
   test:
     runs-on: ubuntu-latest
 
     services:
       mysql:
-        image: mysql
+        image: mysql:8.0 # É crucial especificar a versão, use a que você usa localmente (ex: mysql:8.0)
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: "" # Sua senha de root. Se você tem uma, coloque-a aqui.
+                                  # Se for vazia como no seu CI, use aspas vazias.
+          MYSQL_DATABASE: onibus_app_test # Nome do seu banco de dados de TESTE
         ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+          - "3306:3306"
+        options: >- # Usado para múltiplas opções em uma linha
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -p${MYSQL_ROOT_PASSWORD}"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10 # Aumentei o retries para dar mais tempo ao MySQL
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential default-libmysqlclient-dev git libyaml-dev pkg-config google-chrome-stable
+      - name: Install apt packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-libmysqlclient-dev build-essential git pkg-config google-chrome-stable # Adicionado build-essential e pkg-config
+                                                                                                                   # para algumas gems nativas
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -84,12 +89,59 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Run tests
+      - name: Configure database.yml for CI
+        run: |
+          # Criar ou ajustar o database.yml para o ambiente de CI
+          # Esta é uma forma genérica. Adapte-a ao seu database.yml real!
+          # Certifique-se que a seção 'test:' do seu database.yml aponte para:
+          #   host: 127.0.0.1
+          #   username: root
+          #   password:
+          #   database: onibus_app_test
+          cat << EOF > config/database.yml
+          default: &default
+            adapter: mysql2
+            encoding: utf8mb4
+            pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+            username: root
+            password: <%= ENV['MYSQL_ROOT_PASSWORD'] %>
+            host: 127.0.0.1 # O host deve ser 127.0.0.1 para acessar o serviço MySQL
+            port: 3306
+
+          development:
+            <<: *default
+            database: onibus_app_development # Use o nome do seu banco de dev
+
+          test:
+            <<: *default
+            database: onibus_app_test # O nome do banco de dados de teste
+          EOF
+
+      - name: Wait for MySQL to be ready ⏳
+        # Tenta conectar ao MySQL até que esteja disponível
+        run: |
+          sudo apt-get install -y mysql-client # Instala o cliente MySQL para o comando 'mysql'
+          until mysql -h 127.0.0.1 -P 3306 -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SELECT 1"; do
+            echo "Waiting for MySQL service..."
+            sleep 5
+          done
+          echo "MySQL is up and running!"
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ services.mysql.env.MYSQL_ROOT_PASSWORD }} # Passa a senha do serviço
+
+      - name: Create and Migrate Test Database 💾
+        run: |
+          # Use db:test:prepare para criar o banco de dados de teste e rodar as migrações
+          bin/rails db:test:prepare
         env:
           RAILS_ENV: test
-          DATABASE_URL: mysql2://127.0.0.1:3306
-          # REDIS_URL: redis://localhost:6379/0
+          # DATABASE_URL: mysql2://root:${{ services.mysql.env.MYSQL_ROOT_PASSWORD }}@127.0.0.1:3306/onibus_app_test # Opcional se database.yml estiver corret
+
+      - name: Run RSpec tests 🚀
         run: bundle exec rspec
+        env:
+          RAILS_ENV: test
+          # DATABASE_URL: mysql2://root:${{ services.mysql.env.MYSQL_ROOT_PASSWORD }}@127.0.0.1:3306/onibus_app_test # Opcional
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
@@ -97,4 +149,4 @@ jobs:
         with:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+          if-no-files-found: ignore # Continuar mesmo se não houver screenshots
