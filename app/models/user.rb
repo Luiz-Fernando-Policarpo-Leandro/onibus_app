@@ -6,4 +6,8 @@ class User < ApplicationRecord
 
   has_one :verification
   belongs_to :status
+  belongs_to :role
+  belongs_to :municipio
+
+  validates :role, presence: true
 end

@@ -10,8 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_09_023530) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_14_153655) do
+  create_table "municipios", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "nome", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "onibuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "roles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -28,7 +40,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_023530) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "status_id", null: false
+    t.bigint "municipio_id", null: false
+    t.string "nome"
+    t.bigint "role_id", null: false
+    t.string "cep"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["municipio_id"], name: "index_users_on_municipio_id"
+    t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["status_id"], name: "index_users_on_status_id"
   end
 
@@ -40,6 +58,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_023530) do
     t.index ["user_id"], name: "index_verifications_on_user_id"
   end
 
+  add_foreign_key "users", "municipios"
+  add_foreign_key "users", "roles"
   add_foreign_key "users", "statuses"
   add_foreign_key "verifications", "users"
 end
