@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
 
       user = User.new(
         nome: "Commun Name",
-        email: 'test@gmail.com', 
+        email: 'test@gmail.com',
         password: "HJtJ1232@",
         role_id: (Role.find_or_create_by(nome: "aluno").id),
         status_id: status.id,
