@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  before_action :redirect_if_logged_in, only: [ :new ]
   def new
     # Renderiza o formulário de login
   end
@@ -6,8 +7,10 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
+
       session[:user_id] = user.id # Armazena o ID do usuário na sessão
       flash[:success] = "Login bem-sucedido!"
+
       redirect_to root_path
     else
       flash.now[:danger] = "Email ou senha inválidos." # flash.now desaparece na próxima requisição

@@ -1,25 +1,49 @@
 class UsersController < ApplicationController
+  before_action :redirect_if_logged_in, only: [ :new ]
   def new
     @user = User.new
   end
 
   def create
     @user = User.new(user_params)
-    @user.status = Status.find_by(name: "waiting") # define estatus como "waiting"
+    @user.status_id = Status.find_by(name: "waiting").id # define estatus como "waiting"
+
+    @user.municipio_id = user_params[:municipio_id]
     @user.build_verification(code_verification: SecureRandom.hex(4))
 
     if @user.save
       session[:user_id] = @user.id # o usuário é logado após o registro
+      VerificationMailer.with(user: @user).welcome_email.deliver_later
       flash[:success] = "Bem-vindo ao app, #{@user.email}!"
-      redirect_to root_path # Redireciona para a página inicial
+      redirect_to root_path
     else
       render "new", status: :unprocessable_entity
     end
   end
 
-  private
+  def verification_email_code
+    @user = current_user
 
+    if params[:code].present?
+      code_user = Verification.find_by(user_id: current_user.id).code_verification
+      if code_user == params[:code]
+        @user = current_user
+        status_active = Status.find_by(name: "active")
+        @user.update(status_id: status_active)
+
+        redirect_to home_path and return
+      end
+      flash[:danger] = "codigo de verificação incorreto"
+      redirect_to verification_path
+    end
+  end
+
+  def users_page
+    @user = current_user
+  end
+
+  private
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
+    params.require(:user).permit(:nome, :email, :password, :password_confirmation, :municipio_id, :cpf, :cep, :matricula, :role_id)
   end
 end

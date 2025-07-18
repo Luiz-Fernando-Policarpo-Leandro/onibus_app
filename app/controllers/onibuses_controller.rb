@@ -1,9 +1,14 @@
 class OnibusesController < ApplicationController
   before_action :require_user, except: [ :home ]
+  before_action :redirect_if_logged_in, only: [ :home ]
   before_action :set_onibus, only: %i[ show edit update destroy ]
 
   def home
   end
+
+  def onibuses_routes
+  end
+
   # GET /onibuses or /onibuses.json
   def index
     @onibuses = Onibus.all

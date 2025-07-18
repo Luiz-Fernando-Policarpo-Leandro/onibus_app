@@ -1,13 +1,41 @@
-<h1>Users#new</h1>
-<p>Find me in app/views/users/new.html.erb</p>
 <h1>Registrar</h1>
 
 <%= form_with(model: @user, url: signup_path, local: true) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
 
   <div class="field">
+    <%= f.label :nome, "Nome Completo" %>
+    <%= f.text_field :nome , value: "nome comum"%>
+  </div>
+
+  <div class="field">
     <%= f.label :email %>
-    <%= f.email_field :email %>
+    <%= f.email_field :email, value: "generico@gmail.com"%>
+  </div>
+
+  <div class="field">
+    <%= f.label :cpf %>
+    <%= f.text_field :cpf, value: "12345679910"%>
+  </div>
+
+  <div class="field">
+    <%= f.label :matricula %>
+    <%= f.text_field :matricula, value: "123456789"%>
+  </div>
+
+  <div class="field">
+    <%= f.label :cep %>
+    <%= f.text_field :cep, value: "1234-567"%>
+  </div>
+
+  <div class="field">
+    <%= f.label :municipio_id, "Município" %>
+    <%= f.collection_select :municipio_id, Municipio.all, :id, :nome, prompt: "Selecione o município" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :role_id, "Tipo de Usuário" %>
+    <%= f.collection_select :role_id, Role.all, :id, :nome, prompt: "Selecione a função" %>
   </div>
 
   <div class="field">
