@@ -36,3 +36,5 @@ Things you may want to cover:
 
 fontes usadas para fazer a aplicação:
 https://dev.to/kjdowns/creating-a-user-login-system-ruby-on-rails-2kl2
+
+https://guiarails.com.br/action_mailer_basics.html
