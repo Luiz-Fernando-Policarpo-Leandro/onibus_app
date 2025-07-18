@@ -1,5 +1,4 @@
 class VerificationMailer < ApplicationMailer
-
   def welcome_email
     @user = params[:user]
     @code = Verification.find_by(user_id: @user.id)&.code_verification
