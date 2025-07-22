@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :redirect_if_logged_in, only: [ :new ]
   def new
     @user = User.new
+    @user.phones.build
   end
 
   def create
@@ -22,28 +23,27 @@ class UsersController < ApplicationController
   end
 
   def verification_email_code
-    @user = current_user
-
     if params[:code].present?
       code_user = Verification.find_by(user_id: current_user.id).code_verification
       if code_user == params[:code]
         @user = current_user
         status_active = Status.find_by(name: "active")
-        @user.update(status_id: status_active)
+        puts("\n\n#{status_active.id}\n\n")
+        @user.update_column(:status_id, status_active.id)
 
-        redirect_to home_path and return
+        redirect_to "/home-page" and return
       end
       flash[:danger] = "codigo de verificação incorreto"
       redirect_to verification_path
     end
   end
 
-  def users_page
+  def userHomePage
     @user = current_user
   end
 
   private
   def user_params
-    params.require(:user).permit(:nome, :email, :password, :password_confirmation, :municipio_id, :cpf, :cep, :matricula, :role_id)
+    params.require(:user).permit(:nome, :email, :password, :password_confirmation, :municipio_id, :cpf, :cep, :matricula, :role_id, phones_attributes: [ :id, :number, :_destroy ])
   end
 end

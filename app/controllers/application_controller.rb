@@ -23,6 +23,6 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_if_logged_in
-    redirect_to "/home-page" if logged_in?
+    redirect_to "/home" if logged_in?
   end
 end

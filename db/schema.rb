@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_16_005655) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_21_234729) do
   create_table "municipios", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "nome", null: false
     t.datetime "created_at", null: false
@@ -20,6 +20,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_005655) do
   create_table "onibuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "phones", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "number"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_phones_on_user_id"
   end
 
   create_table "roles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -60,6 +68,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_005655) do
     t.index ["user_id"], name: "index_verifications_on_user_id"
   end
 
+  add_foreign_key "phones", "users"
   add_foreign_key "users", "municipios"
   add_foreign_key "users", "roles"
   add_foreign_key "users", "statuses"

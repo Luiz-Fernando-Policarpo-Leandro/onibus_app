@@ -51,7 +51,8 @@ users_adm = [
     cpf: "12345678914",
     role_id: Role.find_by(nome: "admin").id,
     municipio_id: Municipio.find_by(nome: "Maceió").id,
-    matricula: "123456789"
+    matricula: "123456789",
+    telefones: [ "82912345678", "82987654321" ]
   },
   {
     nome: "Mario Penedo",
@@ -61,15 +62,21 @@ users_adm = [
     cep: cep_aleatorio("Cajueiro"),
     role_id: Role.find_by(nome: "admin").id,
     municipio_id: Municipio.find_by(nome: "Cajueiro").id,
-    matricula: "123456789"
+    matricula: "123456789",
+    telefones: [ "82911223344" ]
   }
 ]
 
-users_adm.each do |adm|
-  user = User.find_or_initialize_by(email: adm[:email])
-  user.assign_attributes(adm.merge(status_id: Status.find_or_create_by(name: "active").id))
+# telfones ficcionais
+users_adm.each do |adm_attrs|
+  telefones = adm_attrs.delete(:telefones)
+  user = User.find_or_initialize_by(email: adm_attrs[:email])
+  user.assign_attributes(adm_attrs.merge(status_id: Status.find_by(name: "active").id))
   user.save!
-end
 
+  telefones.each do |num|
+    Phone.find_or_create_by(user_id: user.id, number: num)
+  end
+end
 
 puts "Seed finalizada."

@@ -25,4 +25,6 @@ Rails.application.routes.draw do
 
   get "verification", to: "users#verification_email_code"
   post "verification", to: "users#verification_email_code"
+
+  get "status", to: "user#userHomePage"
 end

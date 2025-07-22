@@ -1,3 +1,5 @@
+<%= javascript_include_tag 'phones' %>
+
 <h1>Registrar</h1>
 
 <%= form_with(model: @user, url: signup_path, local: true) do |f| %>
@@ -48,7 +50,28 @@
     <%= f.password_field :password_confirmation , value: "KJT20201"%>
   </div>
 
-  <div class="actions">
+  <div id="phones">
+    <%= f.fields_for :phones do |phone_fields| %>
+      <div class="field">
+        <%= phone_fields.label :number, "Número do Telefone" %>
+        <%= phone_fields.text_field :number, class: "phone-input" %>
+        <%= link_to "Remover", "#", class: "remove-phone" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= link_to "Adicionar Telefone", "#", id: "add-phone" %>
+
+  <div id="phone-template" style="display: none;">
+    <div class="field">
+      <label for="">Número do Telefone</label>
+      <input type="text" name="user[phones_attributes][NEW_INDEX][number]" class="phone-input" />
+      <a href="#" class="remove-phone">Remover</a>
+    </div>
+  </div>
+
+
+<div class="actions">
     <%= f.submit "Registrar" %>
   </div>
 <% end %>
