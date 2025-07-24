@@ -1,1 +1,7 @@
 <p>bem vindo</p>
+
+
+
+<% if current_user.admin? %>
+  <%= link_to 'Gerenciar Usuários', users_path %>
+<% end %>

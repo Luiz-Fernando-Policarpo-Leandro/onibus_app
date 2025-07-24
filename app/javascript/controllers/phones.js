@@ -1,21 +1,52 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initializePhoneListeners() {
   const addPhoneBtn = document.getElementById("add-phone");
   const phonesDiv = document.getElementById("phones");
-  const phoneTemplate = document.getElementById("phone-template").innerHTML;
+  const phoneTemplate = document.getElementById("phone-template");
 
-  let index = 1;
+  if (!addPhoneBtn || !phonesDiv || !phoneTemplate) {
+    return;
+  }
 
-  addPhoneBtn.addEventListener("click", function (e) {
+  let nextNewIndex = Date.now();
+
+  const addPhoneHandler = function (e) {
     e.preventDefault();
-    let newPhoneHTML = phoneTemplate.replace(/NEW_INDEX/g, index);
+    let newPhoneHTML = phoneTemplate.innerHTML.replace(/NEW_INDEX/g, nextNewIndex);
     phonesDiv.insertAdjacentHTML("beforeend", newPhoneHTML);
-    index++;
-  });
+    nextNewIndex++;
+  };
 
-  phonesDiv.addEventListener("click", function (e) {
+  addPhoneBtn.removeEventListener("click", addPhoneHandler);
+  addPhoneBtn.addEventListener("click", addPhoneHandler);
+
+  // Ações de remover telefone
+  const removePhoneHandler = function (e) {
     if (e.target.classList.contains("remove-phone")) {
       e.preventDefault();
-      e.target.closest(".field").remove();
+      const phoneField = e.target.closest(".nested-fields");
+
+      if (phoneField) {
+        const destroyField = phoneField.querySelector(".destroy-field");
+
+        if (destroyField) {
+          const idField = phoneField.querySelector('input[id$="_id"]');
+          if (idField && idField.value) { // É um registro existente
+            destroyField.value = '1';
+            phoneField.style.display = 'none';
+            phoneField.classList.add('hidden-for-deletion');
+          } else { // É um campo novo ou sem ID
+            phoneField.remove();
+          }
+        } else {
+          phoneField.remove();
+        }
+      }
     }
-  });
-});
+  };
+  phonesDiv.removeEventListener("click", removePhoneHandler);
+  phonesDiv.addEventListener("click", removePhoneHandler);
+}
+
+document.addEventListener("DOMContentLoaded", initializePhoneListeners);
+
+document.addEventListener("turbo:load", initializePhoneListeners);

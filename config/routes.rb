@@ -13,18 +13,29 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "onibuses#home"
 
-  get "/home-page", to: "onibuses#onibuses_routes"
+  get "/home-page", to: "onibuses#onibuses_routes", as: :homePage
 
 
+  resources :users, only: [ :index, :edit, :update, :show ]
+
+  scope :profile do
+    get "edit", to: "users#edit", as: :edit_profile
+    patch "/", to: "users#update", as: :profile
+    put "/", to: "users#update"
+    get "/", to: "users#profileUser", as: :profileUser
+  end
+
+
+  # autentication
   get "signup", to: "users#new"
   post "signup", to: "users#create"
-
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
+
   get "verification", to: "users#verification_email_code"
   post "verification", to: "users#verification_email_code"
 
-  get "status", to: "user#userHomePage"
+  # get "profile", to: "users#profileUser", as: :profileUser
 end

@@ -38,3 +38,7 @@ fontes usadas para fazer a aplicação:
 https://dev.to/kjdowns/creating-a-user-login-system-ruby-on-rails-2kl2
 
 https://guiarails.com.br/action_mailer_basics.html
+
+https://apidock.com/rails/v7.1.3.4/ActiveRecord/Persistence/update_columns
+
+https://api.rubyonrails.org/classes/ActionController/Redirecting.html#method-i-redirect_back

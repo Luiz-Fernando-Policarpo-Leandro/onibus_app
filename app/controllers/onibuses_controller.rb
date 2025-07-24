@@ -2,6 +2,7 @@ class OnibusesController < ApplicationController
   before_action :require_user, except: [ :home ]
   before_action :redirect_if_logged_in, only: [ :home ]
   before_action :set_onibus, only: %i[ show edit update destroy ]
+  before_action :just_admin_permission,  only: %i[ index show edit show]
 
   def home
   end

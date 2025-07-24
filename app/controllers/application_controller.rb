@@ -22,7 +22,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def just_admin_permission
+    unless current_user.admin?
+      flash[:danger] = "Você não tem permissão"
+      redirect_back fallback_location: root_path
+    end
+  end
+
   def redirect_if_logged_in
-    redirect_to "/home" if logged_in?
+    redirect_to homePage_path if logged_in?
   end
 end

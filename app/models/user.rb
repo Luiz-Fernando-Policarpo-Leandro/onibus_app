@@ -16,4 +16,9 @@ class User < ApplicationRecord
   validates :cpf, presence: true, uniqueness: true
   validates :cep, presence: true
   validates :matricula, presence: true
+
+
+  def admin?
+    self.role.present? && self.role.nome == "admin"
+  end
 end

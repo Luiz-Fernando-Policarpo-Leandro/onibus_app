@@ -1,0 +1,25 @@
+<h2>Detalhes do Usuário</h2>
+
+<ul>
+  <li><strong>Nome:</strong> <%= @user.nome %></li>
+  <li><strong>Status da Conta:</strong> <%= @user.status.name %></li>
+  <li><strong>CPF:</strong> <%= @user.cpf %></li>
+  <li><strong>Matrícula:</strong> <%= @user.matricula %></li>
+  <li>
+    <strong>Telefones:</strong>
+    <% if @user.phones.any? %>
+      <ul>
+        <% @user.phones.each do |phone| %>
+          <li><%= phone.number %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      Nenhum telefone cadastrado.
+    <% end %>
+  </li>
+</ul>
+
+<div class="actions">
+  <%= link_to 'Voltar', root_path %>
+  <%= link_to 'Editar Perfil', edit_profile_path %>
+</div>

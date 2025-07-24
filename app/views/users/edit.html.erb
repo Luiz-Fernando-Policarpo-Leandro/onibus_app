@@ -1,0 +1,16 @@
+<h1>Editar Perfil</h1>
+
+<%= form_with(model: @user, local: true) do |f| %>
+  <%= render 'form', f: f %>
+  <% content_for :button_text, "Atualizar Perfil" %>
+<% end %>
+
+
+<div class="actions">
+  <% if @user == current_user %>
+    <%= link_to 'Voltar ao Perfil', profileUser_path %>
+  <% elsif current_user.admin? %>
+    <%= link_to 'Voltar para Lista de Usuários', users_path %>
+    <%= link_to 'Ver Perfil', user_path(@user) %>
+  <% end %>
+</div>

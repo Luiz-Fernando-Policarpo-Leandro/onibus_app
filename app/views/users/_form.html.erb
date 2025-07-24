@@ -1,0 +1,76 @@
+<%= javascript_include_tag 'controllers/phones' %>
+
+<%= render 'shared/error_messages', object: f.object %>
+
+<div class="field">
+  <%= f.label :nome, "Nome Completo" %>
+  <%= f.text_field :nome%>
+</div>
+
+<div class="field">
+  <%= f.label :email %>
+  <%= f.email_field :email%>
+</div>
+
+<div class="field">
+  <%= f.label :cpf %>
+  <%= f.text_field :cpf%>
+</div>
+
+<div class="field">
+  <%= f.label :matricula %>
+  <%= f.text_field :matricula%>
+</div>
+
+<div class="field">
+  <%= f.label :cep %>
+  <%= f.text_field :cep%>
+</div>
+
+<div class="field">
+  <%= f.label :municipio_id, "Município" %>
+  <%= f.collection_select :municipio_id, Municipio.all, :id, :nome, prompt: "Selecione o município" %>
+</div>
+
+<div class="field">
+  <%= f.label :role_id, "Tipo de Usuário" %>
+  <%= f.collection_select :role_id, Role.all, :id, :nome, prompt: "Selecione a função" %>
+</div>
+
+<div class="field">
+  <%= f.label :password %>
+  <%= f.password_field :password, placeholder: "Deixe em branco para não alterar" %> <%# Added placeholder %>
+</div>
+
+<div class="field">
+  <%= f.label :password_confirmation, "Confirmação de Senha" %>
+  <%= f.password_field :password_confirmation, placeholder: "Deixe em branco para não alterar" %> <%# Added placeholder %>
+</div>
+
+<div id="phones">
+
+  <%= f.fields_for :phones do |phone_fields| %>
+    <div class="nested-fields field">
+      <%= phone_fields.label :number, "Número do Telefone" %>
+      <%= phone_fields.text_field :number, class: "phone-input" %>
+      <%= phone_fields.hidden_field :_destroy, value: phone_fields.object.new_record? ? nil : 0, class: 'destroy-field' %>
+      <%= phone_fields.hidden_field :id %>
+      <a href="#" class="remove-phone">Remover</a>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "Adicionar Telefone", "#", id: "add-phone" %>
+
+<div id="phone-template" style="display: none;">
+  <div class="nested-fields field">
+    <label for="user_phones_attributes_NEW_INDEX_number">Número do Telefone</label>
+    <input type="text" name="user[phones_attributes][NEW_INDEX][number]" id="user_phones_attributes_NEW_INDEX_number" class="phone-input" />
+    <input type="hidden" name="user[phones_attributes][NEW_INDEX][_destroy]" value="0" class="destroy-field" />
+    <a href="#" class="remove-phone">Remover</a>
+  </div>
+</div>
+
+<div class="actions">
+  <%= f.submit yield(:button_text) || "Salvar" %>
+</div>

@@ -1,0 +1,32 @@
+<h1>Gerenciar Usuários</h1>
+
+<% if @users.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Função</th>
+        <th>Status</th>
+        <th colspan="3">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.nome %></td>
+          <td><%= user.email %></td>
+          <td><%= user.role.nome if user.role %></td>
+          <td><%= user.status.name if user.status %></td>
+          <td><%= link_to 'Visualizar', user_path(user) %></td> <%# Link para a página de visualização do usuário %>
+          <td><%= link_to 'Editar', edit_user_path(user) %></td> <%# Link para a edição do usuário %>
+          <td><%= link_to 'Excluir', user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza?' } %></td> <%# Opcional: link para excluir %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Nenhum usuário cadastrado.</p>
+<% end %>
+
+<%= link_to 'Voltar', root_path %>
