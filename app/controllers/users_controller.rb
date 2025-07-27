@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action :redirect_if_logged_in, only: %i[ new ]
+  before_action :require_user, except: %i[new create]
   before_action :just_admin_permission, only: %i[ index show destroy ]
+
 
   # /users/:id/edit
   def edit

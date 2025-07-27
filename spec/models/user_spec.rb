@@ -24,7 +24,6 @@ RSpec.describe User, type: :model do
     it "it isn't valid user" do
       %i[nome email password cpf status_id role_id municipio_id cep matricula].each do |attr|
         attrs = valid_attributes.dup
-        puts("sem o #{attr}: #{attrs[attr]}")
         attrs[attr] = nil
         user = User.new(attrs)
         expect(user).not_to be_valid, "expected user to be invalid without #{attr}"

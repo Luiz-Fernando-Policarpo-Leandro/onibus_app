@@ -42,3 +42,5 @@ https://guiarails.com.br/action_mailer_basics.html
 https://apidock.com/rails/v7.1.3.4/ActiveRecord/Persistence/update_columns
 
 https://api.rubyonrails.org/classes/ActionController/Redirecting.html#method-i-redirect_back
+
+https://rspec.info/features/6-0/rspec-rails/request-specs/request-spec/

@@ -50,7 +50,9 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem "rspec-rails"
+  # To tests
+  gem "rspec-rails" # doc [https://rspec.info/documentation/]
+  gem "rails-controller-testing"
   gem "dotenv-rails"
 end
 

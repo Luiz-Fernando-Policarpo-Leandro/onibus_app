@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def require_user
     if !logged_in?
-      flash[:danger] = "Você precisa estar logado para acessar esta página."
+      flash[:danger] = "Você precisa estar logado para acessar a página."
       redirect_to root_path
     elsif current_user.status.name == "waiting"
       flash[:danger] = "Você recebeu um código na sua caixa de email. Verifique, por favor."
