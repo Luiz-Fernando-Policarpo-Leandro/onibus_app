@@ -20,6 +20,9 @@
 </ul>
 
 <div class="actions">
-  <%= link_to 'Voltar', root_path %>
+  <%= link_to 'Voltar para o inicio', root_path %>
   <%= link_to 'Editar Perfil', edit_profile_path %>
+  <% if current_user.admin?%>
+    <%= link_to 'Voltar para Lista de Usuários', users_path %>
+  <% end %>
 </div>

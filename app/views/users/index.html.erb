@@ -1,5 +1,9 @@
 <h1>Gerenciar Usuários</h1>
 
+<%= link_to 'Ver Alunos do Meu Município', users_path(filter_by_municipio: true), class: 'btn btn-primary' %>
+<%= link_to 'Ver Todos os Usuários', users_path, class: 'btn btn-secondary' %>
+<hr>
+
 <% if @users.any? %>
   <table>
     <thead>
@@ -13,6 +17,7 @@
     </thead>
     <tbody>
       <% @users.each do |user| %>
+        <% next if user == current_user%>
         <tr>
           <td><%= user.nome %></td>
           <td><%= user.email %></td>
@@ -20,7 +25,7 @@
           <td><%= user.status.name if user.status %></td>
           <td><%= link_to 'Visualizar', user_path(user) %></td> <%# Link para a página de visualização do usuário %>
           <td><%= link_to 'Editar', edit_user_path(user) %></td> <%# Link para a edição do usuário %>
-          <td><%= link_to 'Excluir', user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza?' } %></td> <%# Opcional: link para excluir %>
+          <td><%= link_to 'Excluir', user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este usuário?' } %>
         </tr>
       <% end %>
     </tbody>

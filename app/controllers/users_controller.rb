@@ -1,20 +1,29 @@
 class UsersController < ApplicationController
   before_action :redirect_if_logged_in, only: %i[ new ]
-  before_action :just_admin_permission, only: %i[index show]
+  before_action :just_admin_permission, only: %i[ index show destroy ]
 
+  # /users/:id/edit
   def edit
     if params[:id].present?
-      @user = User.find(params[:id])
       just_admin_permission
+      @user = User.find(params[:id])
     else
       @user = current_user
     end
   end
 
   def index
-    @users = User.all.order(:nome)
+    if params[:filter_by_municipio].present? && current_user&.admin?
+      aluno_role = Role.find_by(nome: "aluno")
+      @users = User.where(
+        municipio_id: current_user.municipio_id,
+       role_id: aluno_role.id).order(:nome)
+    else
+      @users = User.all.order(:nome)
+    end
   end
 
+  # /users/1
   def show
     @user = User.find(params[:id])
     render :profileUser
@@ -66,6 +75,20 @@ class UsersController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    if admin_restriction
+      if @user.destroy
+        flash[:success] = "Usuário #{@user.nome} excluído com sucesso."
+      else
+        flash[:danger] = "Não foi possível excluir o usuário #{@user.nome}."
+      end
+    else
+      flash[:danger] = "você não pode deletar alguem que não seja do seu municipio ou outro admin"
+    end
+    redirect_to users_path
   end
 
 

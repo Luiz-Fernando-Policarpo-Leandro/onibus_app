@@ -32,4 +32,8 @@ class ApplicationController < ActionController::Base
   def redirect_if_logged_in
     redirect_to homePage_path if logged_in?
   end
+
+  def admin_restriction
+    @user.role.nome == "aluno" && @user.municipio == current_user.municipio
+  end
 end

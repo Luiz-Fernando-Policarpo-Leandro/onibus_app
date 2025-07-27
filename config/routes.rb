@@ -16,11 +16,12 @@ Rails.application.routes.draw do
   get "/home-page", to: "onibuses#onibuses_routes", as: :homePage
 
 
-  resources :users, only: [ :index, :edit, :update, :show ]
+  resources :users, only: [ :index, :edit, :update, :show, :destroy ]
 
   scope :profile do
     get "edit", to: "users#edit", as: :edit_profile
     patch "/", to: "users#update", as: :profile
+    delete "Excluir", to: "users#destroy", as: :destroy
     put "/", to: "users#update"
     get "/", to: "users#profileUser", as: :profileUser
   end
@@ -36,6 +37,4 @@ Rails.application.routes.draw do
 
   get "verification", to: "users#verification_email_code"
   post "verification", to: "users#verification_email_code"
-
-  # get "profile", to: "users#profileUser", as: :profileUser
 end
