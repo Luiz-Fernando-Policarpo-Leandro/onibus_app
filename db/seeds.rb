@@ -1,14 +1,14 @@
 require 'open-uri'  # Para requisições HTTP
 require 'json'      # Para parsear JSON
 
-# Criar status base
 
+# Criar status base
 %w[active block waiting].each do |status_name|
   Status.find_or_create_by(name: status_name)
 end
 
 # Busca e cria municípios de Alagoas
-url = url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/27/municipios'
+url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/27/municipios'
 
 puts("Create Municipios")
 data = URI.open(url).read
@@ -77,6 +77,18 @@ users_adm.each do |adm_attrs|
   telefones.each do |num|
     Phone.find_or_create_by(user_id: user.id, number: num)
   end
+end
+
+## modelos de onibus
+modelos_onibus = { "vision 2000": "Eterna Indústrias",
+  "AetherGlide": "Vanguard Motors",
+  "Stratos XL": "Horizon Transports",
+  "UrbanLink 50": "Cetro Veículos",
+  "Trilha Master": "Nômade Veículos"
+}
+
+modelos_onibus.each do |nome, fabricante|
+  Modelo.find_or_create_by!(nome: nome, fabricante: fabricante)
 end
 
 puts "Seed finalizada."

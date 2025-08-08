@@ -47,6 +47,4 @@ function initializePhoneListeners() {
   phonesDiv.addEventListener("click", removePhoneHandler);
 }
 
-document.addEventListener("DOMContentLoaded", initializePhoneListeners);
-
 document.addEventListener("turbo:load", initializePhoneListeners);

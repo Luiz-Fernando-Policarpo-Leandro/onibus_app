@@ -1,17 +1,69 @@
-<%= form_with(model: onibus) do |form| %>
-  <% if onibus.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(onibus.errors.count, "error") %> prohibited this onibus from being saved:</h2>
+<%= javascript_include_tag "controllers/routes_form"%>
+<div class="container mx-auto p-4 max-w-2xl">
+  <div class="bg-white shadow-xl rounded-lg p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">
+      <%= @onibus.new_record? ? "Criar Novo Ônibus" : "Editar Ônibus" %>
+    </h1>
 
-      <ul>
-        <% onibus.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+    <%= form_with(model: @onibus, local: true, class: "space-y-6") do |form| %>
+      <% if @onibus.errors.any? %>
+        <div id="error_explanation" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <h2 class="font-bold">
+            <%= pluralize(@onibus.errors.count, "erro") %>
+            proibiu este ônibus de ser salvo:
+          </h2>
+          <ul class="list-disc ml-5 mt-2">
+            <% @onibus.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <!-- Informações do Ônibus -->
+      <div class="space-y-4">
+        <h2 class="text-2xl font-semibold border-b pb-2">Detalhes do Ônibus</h2>
+
+        <div>
+          <%= form.label :numero_onibus, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :numero_onibus, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+        </div>
+
+        <div>
+          <%= form.label :capacidade_maxima, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :capacidade_maxima, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+        </div>
+
+        <div>
+          <%= form.label :modelo_id, "Modelo do Ônibus", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.collection_select :modelo_id, Modelo.all, :id, :nome, { prompt: "Selecione um modelo" }, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+        </div>
+      </div>
+
+      <div id="rotas-form-container" class="space-y-4">
+        <h2 class="text-2xl font-semibold border-b pb-2">Rotas</h2>
+        <%= form.fields_for :rotas do |rota_fields| %>
+          <%= render "rota_fields", f: rota_fields %>
         <% end %>
-      </ul>
-    </div>
-  <% end %>
+      </div>
 
-  <div>
-    <%= form.submit %>
+      <div class="flex justify-center">
+        <button type="button" id="add-rota-button" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Adicionar Outra Rota
+        </button>
+      </div>
+
+      <div class="actions pt-4 text-center">
+        <%= form.submit "Salvar Ônibus e Rotas", class: "cursor-pointer px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
+
+<template id="rota-fields-template">
+  <%= form_with(model: @onibus, local: true) do |form| %>
+    <%= form.fields_for :rotas, Rota.new, child_index: "NEW_RECORD" do |rota_fields| %>
+      <%= render "rota_fields", f: rota_fields %>
+    <% end %>
+  <% end %>
+</template>
