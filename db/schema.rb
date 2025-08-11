@@ -61,11 +61,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_051829) do
     t.bigint "municipio_destino_id", null: false
     t.time "horario_saida"
     t.time "horario_chegada"
-    t.string "dias_da_semana"
+    t.bigint "weekday_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["municipio_destino_id"], name: "index_rota_on_municipio_destino_id"
     t.index ["municipio_origem_id"], name: "index_rota_on_municipio_origem_id"
+    t.index ["weekday_id"], name: "index_rota_on_weekday_id"
   end
 
   create_table "statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -100,12 +101,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_051829) do
     t.index ["user_id_id"], name: "index_verifications_on_user_id_id"
   end
 
+  create_table "weekdays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "escala_onibuses", "onibuses"
   add_foreign_key "escala_onibuses", "rota", column: "rota_id"
   add_foreign_key "onibuses", "modelos"
   add_foreign_key "phones", "users"
   add_foreign_key "rota", "municipios", column: "municipio_destino_id"
   add_foreign_key "rota", "municipios", column: "municipio_origem_id"
+  add_foreign_key "rota", "weekdays"
   add_foreign_key "users", "municipios"
   add_foreign_key "users", "roles"
   add_foreign_key "users", "statuses"

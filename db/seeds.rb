@@ -2,6 +2,11 @@ require 'open-uri'  # Para requisições HTTP
 require 'json'      # Para parsear JSON
 
 
+puts("dias da semana")
+%w[ segunda terca quarta quinta sexta sabado ].each do |dia|
+  Weekday.find_or_create_by(name: dia)
+end
+
 # Criar status base
 %w[active block waiting].each do |status_name|
   Status.find_or_create_by(name: status_name)
@@ -90,5 +95,7 @@ modelos_onibus = { "vision 2000": "Eterna Indústrias",
 modelos_onibus.each do |nome, fabricante|
   Modelo.find_or_create_by!(nome: nome, fabricante: fabricante)
 end
+
+
 
 puts "Seed finalizada."

@@ -5,7 +5,7 @@ class CreateRota < ActiveRecord::Migration[8.0]
       t.references :municipio_destino, null: false, foreign_key: { to_table: :municipios }
       t.time :horario_saida
       t.time :horario_chegada
-      t.string :dias_da_semana
+      t.references :weekday, null: false, foreign_key: true
       t.timestamps
     end
   end
