@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_02_051829) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_223955) do
   create_table "escala_onibuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "onibus_id", null: false
     t.bigint "rota_id", null: false
@@ -18,6 +18,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_051829) do
     t.datetime "updated_at", null: false
     t.index ["onibus_id"], name: "index_escala_onibuses_on_onibus_id"
     t.index ["rota_id"], name: "index_escala_onibuses_on_rota_id"
+  end
+
+  create_table "faculdades", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "nome", null: false
+    t.bigint "municipio_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["municipio_id"], name: "index_faculdades_on_municipio_id"
   end
 
   create_table "modelos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -69,6 +77,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_051829) do
     t.index ["weekday_id"], name: "index_rota_on_weekday_id"
   end
 
+  create_table "schedules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.time "horario_saida", null: false
+    t.time "horario_volta", null: false
+    t.bigint "municipio_id", null: false
+    t.bigint "faculdade_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["faculdade_id"], name: "index_schedules_on_faculdade_id"
+    t.index ["municipio_id"], name: "index_schedules_on_municipio_id"
+    t.index ["user_id"], name: "index_schedules_on_user_id"
+  end
+
   create_table "statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -109,11 +130,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_051829) do
 
   add_foreign_key "escala_onibuses", "onibuses"
   add_foreign_key "escala_onibuses", "rota", column: "rota_id"
+  add_foreign_key "faculdades", "municipios"
   add_foreign_key "onibuses", "modelos"
   add_foreign_key "phones", "users"
   add_foreign_key "rota", "municipios", column: "municipio_destino_id"
   add_foreign_key "rota", "municipios", column: "municipio_origem_id"
   add_foreign_key "rota", "weekdays"
+  add_foreign_key "schedules", "faculdades"
+  add_foreign_key "schedules", "municipios"
+  add_foreign_key "schedules", "users"
   add_foreign_key "users", "municipios"
   add_foreign_key "users", "roles"
   add_foreign_key "users", "statuses"

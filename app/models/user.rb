@@ -6,6 +6,9 @@ class User < ApplicationRecord
   belongs_to :municipio
   has_one :verification
 
+  has_many :schedules, dependent: :destroy
+  accepts_nested_attributes_for :schedules, allow_destroy: true
+
   has_many :phones, dependent: :destroy
   accepts_nested_attributes_for :phones, allow_destroy: true
 
@@ -16,6 +19,8 @@ class User < ApplicationRecord
   validates :cpf, presence: true, uniqueness: true
   validates :cep, presence: true
   validates :matricula, presence: true
+
+  validates :faculdade, presence: true
 
 
   def admin?
