@@ -22,15 +22,13 @@
 
     <div>
       <%= f.label :dias_da_semana, "Dias da Semana", class: "block text-sm font-medium text-gray-700" %>
-      <%= f.collection_select :weekday_id, Weekday.all,:id, :name, {prompt: "selecione um dia"}, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+      <%= f.collection_select :weekday_id, Weekday.all, :id, :name, {prompt: "selecione um dia"}, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
 
     </div>
 
-    <% if f.object.persisted? %>
-      <%= f.hidden_field :_destroy %>
-      <button type="button" class="remove-rota-button mt-2 px-3 py-1 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
-        Remover Rota
-      </button>
-    <% end %>
+    <%= f.hidden_field :_destroy %>
+    <button type="button" class="remove-rota-button mt-2 px-3 py-1 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+      Remover Rota
+    </button>
   </div>
 </div>
