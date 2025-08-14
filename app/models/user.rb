@@ -20,7 +20,7 @@ class User < ApplicationRecord
   validates :cep, presence: true
   validates :matricula, presence: true
 
-  validates :faculdade, presence: true
+  #validates :faculdade, presence: true
 
 
   def admin?

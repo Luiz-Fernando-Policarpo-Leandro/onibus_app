@@ -15,16 +15,32 @@ end
 # Busca e cria municípios de Alagoas
 url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/27/municipios'
 
-puts("Create Municipios")
+puts("Cria os Municipios e suas faculdades")
 data = URI.open(url).read
 municipios = JSON.parse(data)
 
 
 municipios.each do |m|
   nome = m['nome']
-  Municipio.find_or_create_by(nome: nome)
+  new_municipio = Municipio.find_or_create_by(nome: nome)
+
+  2.times do |f|
+    Faculdade.find_or_create_by(nome: "#{f} faculdade de #{nome}",
+      municipio_id: new_municipio.id)
+  end
+
 end
 
+=begin
+municipios.each do |m|
+  mun_id = Municipio.find_by(name)
+  nome = m["nome"]
+  2.times do |i|
+
+    Faculdade.find_or_create_by(nome: "faculdade #{nome} #{i}", municipio_id: )
+  end
+end
+=end
 
 # CEPs ficticios por município
 CEPS_POR_MUNICIPIO = {
@@ -56,6 +72,7 @@ users_adm = [
     cpf: "12345678914",
     role_id: Role.find_by(nome: "admin").id,
     municipio_id: Municipio.find_by(nome: "Maceió").id,
+    #faculdade_id: ,
     matricula: "123456789",
     telefones: [ "82912345678", "82987654321" ]
   },
