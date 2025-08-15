@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_11_223955) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_15_003028) do
   create_table "escala_onibuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "onibus_id", null: false
     t.bigint "rota_id", null: false
@@ -96,6 +96,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_223955) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_faculdades", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "faculdade_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["faculdade_id"], name: "index_user_faculdades_on_faculdade_id"
+    t.index ["user_id"], name: "index_user_faculdades_on_user_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", null: false
@@ -139,6 +148,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_223955) do
   add_foreign_key "schedules", "faculdades"
   add_foreign_key "schedules", "municipios"
   add_foreign_key "schedules", "users"
+  add_foreign_key "user_faculdades", "faculdades"
+  add_foreign_key "user_faculdades", "users"
   add_foreign_key "users", "municipios"
   add_foreign_key "users", "roles"
   add_foreign_key "users", "statuses"

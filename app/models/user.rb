@@ -4,7 +4,11 @@ class User < ApplicationRecord
   belongs_to :status
   belongs_to :role
   belongs_to :municipio
+
   has_one :verification
+
+  has_many :user_faculdade, dependent: :destroy
+  has_many :faculdades, through: :user_faculdade
 
   has_many :schedules, dependent: :destroy
   accepts_nested_attributes_for :schedules, allow_destroy: true

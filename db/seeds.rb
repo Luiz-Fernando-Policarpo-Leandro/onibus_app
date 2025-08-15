@@ -28,19 +28,8 @@ municipios.each do |m|
     Faculdade.find_or_create_by(nome: "#{f} faculdade de #{nome}",
       municipio_id: new_municipio.id)
   end
-
 end
 
-=begin
-municipios.each do |m|
-  mun_id = Municipio.find_by(name)
-  nome = m["nome"]
-  2.times do |i|
-
-    Faculdade.find_or_create_by(nome: "faculdade #{nome} #{i}", municipio_id: )
-  end
-end
-=end
 
 # CEPs ficticios por município
 CEPS_POR_MUNICIPIO = {
@@ -72,7 +61,6 @@ users_adm = [
     cpf: "12345678914",
     role_id: Role.find_by(nome: "admin").id,
     municipio_id: Municipio.find_by(nome: "Maceió").id,
-    #faculdade_id: ,
     matricula: "123456789",
     telefones: [ "82912345678", "82987654321" ]
   },
@@ -89,12 +77,16 @@ users_adm = [
   }
 ]
 
-# telfones ficcionais
+
+faculdade_count = Faculdade.count
 users_adm.each do |adm_attrs|
   telefones = adm_attrs.delete(:telefones)
   user = User.find_or_initialize_by(email: adm_attrs[:email])
   user.assign_attributes(adm_attrs.merge(status_id: Status.find_by(name: "active").id))
   user.save!
+
+  faculdade = Faculdade.find_by(municipio_id: Random.rand(1..faculdade_count))
+  user.faculdades << faculdade if faculdade.present?
 
   telefones.each do |num|
     Phone.find_or_create_by(user_id: user.id, number: num)
