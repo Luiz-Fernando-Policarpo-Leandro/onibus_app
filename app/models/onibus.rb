@@ -7,5 +7,4 @@ class Onibus < ApplicationRecord
 
   validates :numero_onibus, presence: true
   validates :capacidade_maxima, presence: true
-
 end

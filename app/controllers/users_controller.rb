@@ -123,7 +123,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(
       :nome, :email, :password, :password_confirmation, :municipio_id, :cpf, :cep, :matricula, :role_id,
       phones_attributes: [ :id, :number, :_destroy ],
-      schedules_attributes: [:id, :horario_saida, :horario_volta, :municipio_id, :faculdade_id, :_destroy]
+      schedules_attributes: [ :id, :horario_saida, :horario_volta, :municipio_id, :faculdade_id, :_destroy ]
       )
   end
 end
