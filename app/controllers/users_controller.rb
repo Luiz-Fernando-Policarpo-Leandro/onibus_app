@@ -113,10 +113,6 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
-  def userSchcedule
-    @user = current_user
-  end
-
   private
 
   def user_params
