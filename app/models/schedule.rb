@@ -4,8 +4,8 @@ class Schedule < ApplicationRecord
   belongs_to :faculdade
 
 
-  validade :horario_saida, presence: true
-  validade :horario_chegada, presence: true
+  validates :horario_saida, presence: true
+  validates :horario_chegada, presence: true
 
   # validate hour
   validate :comparation_hour

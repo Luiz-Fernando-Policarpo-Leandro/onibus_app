@@ -8,7 +8,6 @@ class SchedulesController < ApplicationController
   private
 
   def schedule_params
-    require(:schedule).permit(:user_id, :horario_saida, :horario_volta, :municipio_id, :faculdade_id )
+    require(:schedule).permit(:user_id, :horario_saida, :horario_volta, :municipio_id, :faculdade_id)
   end
-
 end

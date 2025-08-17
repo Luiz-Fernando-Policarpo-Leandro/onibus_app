@@ -12,5 +12,4 @@ class Rota < ApplicationRecord
   validates :municipio_destino, presence: true
   validates :horario_saida, presence: true
   validates :horario_chegada, presence: true
-
 end
