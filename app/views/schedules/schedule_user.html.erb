@@ -1,0 +1,9 @@
+<p><schedule/p>
+<%if @schedules.present?%>
+  <% @schedules.each do |agenda| %>
+    <p>agenda.horario_saida<p>
+    <p>agenda.horario_volta<p>
+  <%end%>
+<%else%>
+  <p>não a agendamento<p>
+<%end%>

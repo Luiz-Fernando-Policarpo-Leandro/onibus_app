@@ -17,13 +17,20 @@ Rails.application.routes.draw do
 
 
   resources :users, only: [ :index, :edit, :update, :show, :destroy ]
-
   scope :profile do
     get "edit", to: "users#edit", as: :edit_profile
     patch "/", to: "users#update", as: :profile
     delete "Excluir", to: "users#destroy", as: :destroy
     put "/", to: "users#update"
     get "/", to: "users#profileUser", as: :profileUser
+  end
+
+  resources :schedules, only: %i[ index edit update show destroy]
+
+  scope :schedule do
+    get "/", to: "schedules#schedule_user", as: :scheduleUser
+    put "/", to: "schedules#update"
+    delete "Excluir", to: "schedules#destroy", as: :destroy_schedule
   end
 
 
