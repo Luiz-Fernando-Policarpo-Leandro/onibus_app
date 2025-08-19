@@ -1,0 +1,9 @@
+<h1>Detalhes do Horário</h1>
+
+<p><strong>Faculdade:</strong> <%= @schedule.faculdade.nome %></p>
+<p><strong>Município:</strong> <%= @schedule.municipio.nome %></p>
+<p><strong>Horário de Saída:</strong> <%= @schedule.horario_saida.strftime("%H:%M") %></p>
+<p><strong>Horário de Volta:</strong> <%= @schedule.horario_volta.strftime("%H:%M") %></p>
+
+<%= link_to "Editar", edit_schedule_path(@schedule) %> |
+<%= link_to "Voltar", scheduleUser_path %>

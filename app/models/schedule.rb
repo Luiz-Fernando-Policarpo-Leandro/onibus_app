@@ -5,7 +5,7 @@ class Schedule < ApplicationRecord
 
 
   validates :horario_saida, presence: true
-  validates :horario_chegada, presence: true
+  validates :horario_volta, presence: true
 
   # validate hour
   validate :comparation_hour

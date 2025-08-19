@@ -1,0 +1,36 @@
+<%= form_with(model: @schedule, local: true) do |form| %>
+  <% if @schedule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@schedule.errors.count, "erro") %> proibiu este agendamento de ser salvo:</h2>
+      <ul>
+        <% @schedule.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :horario_saida %>
+    <%= form.time_field :horario_saida %>
+  </div>
+
+  <div class="field">
+    <%= form.label :horario_volta %>
+    <%= form.time_field :horario_volta %>
+  </div>
+
+  <div class="field">
+    <%= form.label :municipio_id, "Município" %><br>
+    <%= form.collection_select :municipio_id, Municipio.all, :id, :nome, prompt: "Selecione um município" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :faculdade_id, "Faculdade" %><br>
+    <%= form.collection_select :faculdade_id, Faculdade.all, :id, :nome, prompt: "Selecione uma faculdade" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

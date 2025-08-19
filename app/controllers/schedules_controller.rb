@@ -1,7 +1,22 @@
 class SchedulesController < ApplicationController
   before_action :require_user
-  before_action :just_admin_permission, only: %i[show]
-  before_action :set_schedule, only: [ :edit, :destroy ]
+  before_action :just_admin_permission, only: [ :show ]
+  before_action :set_schedule, only: [ :edit, :destroy, :show ]
+
+  def new
+    @schedule = Schedule.new
+  end
+
+  def create
+    @schedule = current_user.schedules.build(schedule_params)
+    if @schedule.save
+      flash[:success] = "Agendamento criado com sucesso!"
+      redirect_to schedules_path
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
 
   def schedule_user
     @schedules = current_user.schedules

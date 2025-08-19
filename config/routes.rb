@@ -25,13 +25,10 @@ Rails.application.routes.draw do
     get "/", to: "users#profileUser", as: :profileUser
   end
 
-  resources :schedules, only: %i[ index edit update show destroy]
+  resources :schedules, only: %i[ index new create edit update show destroy ]
 
-  scope :schedule do
-    get "/", to: "schedules#schedule_user", as: :scheduleUser
-    put "/", to: "schedules#update"
-    delete "Excluir", to: "schedules#destroy", as: :destroy_schedule
-  end
+
+  get "schedule", to: "schedules#schedule_user", as: :scheduleUser
 
 
   # autentication

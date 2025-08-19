@@ -1,9 +1,34 @@
-<p><schedule/p>
-<%if @schedules.present?%>
-  <% @schedules.each do |agenda| %>
-    <p>agenda.horario_saida<p>
-    <p>agenda.horario_volta<p>
-  <%end%>
-<%else%>
-  <p>não a agendamento<p>
-<%end%>
+<h1>Minha Agenda</h1>
+<% if @schedules.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Faculdade</th>
+        <th>Município</th>
+        <th>Horário de Saída</th>
+        <th>Horário de Volta</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @schedules.each do |schedule| %>
+        <tr>
+          <td><%= schedule.faculdade.nome %></td>
+          <td><%= schedule.municipio.nome %></td>
+          <td><%= schedule.horario_saida.strftime("%H:%M") %></td>
+          <td><%= schedule.horario_volta.strftime("%H:%M") %></td>
+          <td>
+            <%= link_to "Editar", edit_schedule_path(schedule) %>
+            <%= link_to "Mostrar", schedule_path(schedule) %>
+            <%= link_to "Excluir", schedule_path(schedule), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este usuário?' } %>
+
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Você ainda não tem horários cadastrados.</p>
+<% end %>
+
+<%= link_to "Novo Horário", new_schedule_path %>
