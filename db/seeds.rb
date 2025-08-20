@@ -79,6 +79,7 @@ users_adm = [
 
 
 faculdade_count = Faculdade.count
+
 users_adm.each do |adm_attrs|
   telefones = adm_attrs.delete(:telefones)
   user = User.find_or_initialize_by(email: adm_attrs[:email])

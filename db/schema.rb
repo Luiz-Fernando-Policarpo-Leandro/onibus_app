@@ -112,6 +112,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_15_003028) do
     t.string "cpf", null: false
     t.string "cep", null: false
     t.string "matricula", null: false
+    t.string "remember_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "status_id", null: false

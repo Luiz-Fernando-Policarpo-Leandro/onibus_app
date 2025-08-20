@@ -10,6 +10,8 @@ class CreateUsers < ActiveRecord::Migration[8.0]
 
       t.string :matricula, null: false
 
+      t.string :remember_digest
+
       t.timestamps
     end
     add_index :users, :email, unique: true

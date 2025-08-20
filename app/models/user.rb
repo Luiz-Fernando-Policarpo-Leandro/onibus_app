@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
+  attr_accessor :remember_token
 
   belongs_to :status
   belongs_to :role
@@ -24,10 +25,13 @@ class User < ApplicationRecord
   validates :cep, presence: true
   validates :matricula, presence: true
 
-  # validates :faculdade, presence: true
-
 
   def admin?
     self.role.present? && self.role.nome == "admin"
+  end
+
+  # session autentication
+  def self.new_token
+    SecureRandom.urlsafe_base64
   end
 end
