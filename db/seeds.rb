@@ -51,7 +51,7 @@ CEPS_POR_MUNICIPIO = {
 }
 
 def cep_aleatorio(municipio)
-  CEPS_POR_MUNICIPIO.fetch(municipio, ["57000-000"]).sample
+  CEPS_POR_MUNICIPIO.fetch(municipio, [ "57000-000" ]).sample
 end
 
 # =========================
