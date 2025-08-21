@@ -1,57 +1,71 @@
-require 'open-uri'  # Para requisições HTTP
-require 'json'      # Para parsear JSON
+require 'open-uri'  # Requisições HTTP
+require 'json'      # Parse JSON
 
+puts "===> Criando dados iniciais..."
 
-puts("dias da semana")
-%w[ segunda terca quarta quinta sexta sabado ].each do |dia|
+# =========================
+# 1. Dias da Semana
+# =========================
+puts "-> Criando dias da semana..."
+%w[segunda terca quarta quinta sexta sabado].each do |dia|
   Weekday.find_or_create_by(name: dia)
 end
 
-# Criar status base
+# =========================
+# 2. Status
+# =========================
+puts "-> Criando status de usuário..."
 %w[active block waiting].each do |status_name|
   Status.find_or_create_by(name: status_name)
 end
 
-# Busca e cria municípios de Alagoas
+# =========================
+# 3. Municípios + Faculdades
+# =========================
+puts "-> Buscando municípios de AL no IBGE..."
 url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/27/municipios'
+municipios = JSON.parse(URI.open(url).read)
 
-puts("Cria os Municipios e suas faculdades")
-data = URI.open(url).read
-municipios = JSON.parse(data)
-
-
+puts "-> Criando municípios e faculdades..."
 municipios.each do |m|
   nome = m['nome']
-  new_municipio = Municipio.find_or_create_by(nome: nome)
+  municipio = Municipio.find_or_create_by(nome: nome)
 
-  2.times do |f|
-    Faculdade.find_or_create_by(nome: "#{f} faculdade de #{nome}",
-      municipio_id: new_municipio.id)
+  2.times do |i|
+    Faculdade.find_or_create_by(
+      nome: "Faculdade #{i + 1} de #{nome}",
+      municipio_id: municipio.id
+    )
   end
 end
 
-
-# CEPs ficticios por município
+# =========================
+# 4. CEPs fictícios
+# =========================
 CEPS_POR_MUNICIPIO = {
-  "Maceió" => [ "57000000", "57035000", "57038000", "57040000" ],
-  "Arapiraca" => [ "57300000", "57302020", "57310005" ],
-  "Cajueiro" => [ "57770000", "57771000" ],
-  "Penedo" => [ "57200000", "57202000" ],
-  "Delmiro Gouveia" => [ "57480000" ]
+  "Maceió"   => %w[57000000 57035000 57038000 57040000],
+  "Cajueiro" => %w[57770000 57771000]
+  # "Arapiraca" => %w[57300000 57302020 57310005],
+  # "Penedo"    => %w[57200000 57202000],
+  # "Delmiro Gouveia" => %w[57480000]
 }
 
-# Criar roles aluno e adm
-puts("create users")
+def cep_aleatorio(municipio)
+  CEPS_POR_MUNICIPIO.fetch(municipio, ["57000-000"]).sample
+end
+
+# =========================
+# 5. Roles
+# =========================
+puts "-> Criando roles..."
 %w[admin aluno].each do |role_name|
   Role.find_or_create_by(nome: role_name)
 end
 
-# Função que retorna CEP aleatório
-def cep_aleatorio(municipio)
-  CEPS_POR_MUNICIPIO.fetch(municipio, [ "57000-000" ]).sample
-end
-
-# Criar admins
+# =========================
+# 6. Usuários Admin
+# =========================
+puts "-> Criando usuários admin..."
 users_adm = [
   {
     nome: "Gabriel Ramos",
@@ -62,50 +76,56 @@ users_adm = [
     role_id: Role.find_by(nome: "admin").id,
     municipio_id: Municipio.find_by(nome: "Maceió").id,
     matricula: "123456789",
-    telefones: [ "82912345678", "82987654321" ]
+    telefones: %w[82912345678 82987654321]
   },
   {
     nome: "Mario Penedo",
     email: "user_adm_master2@gmail.com",
     password: "@AdmPassword123",
-    cpf: "12345678910",
     cep: cep_aleatorio("Cajueiro"),
+    cpf: "12345678910",
     role_id: Role.find_by(nome: "admin").id,
     municipio_id: Municipio.find_by(nome: "Cajueiro").id,
     matricula: "123456789",
-    telefones: [ "82911223344" ]
+    telefones: %w[82911223344]
   }
 ]
 
+faculdades = Faculdade.order("RAND()").limit(users_adm.length)
 
-faculdade_count = Faculdade.count
-
-users_adm.each do |adm_attrs|
+users_adm.each_with_index do |adm_attrs, idx|
   telefones = adm_attrs.delete(:telefones)
+
   user = User.find_or_initialize_by(email: adm_attrs[:email])
   user.assign_attributes(adm_attrs.merge(status_id: Status.find_by(name: "active").id))
   user.save!
 
-  faculdade = Faculdade.find_by(municipio_id: Random.rand(1..faculdade_count))
-  user.faculdades << faculdade if faculdade.present?
+  # Associa faculdade
+  user.faculdades << faculdades[idx] if faculdades[idx].present?
 
+  # Associa telefones
   telefones.each do |num|
     Phone.find_or_create_by(user_id: user.id, number: num)
   end
 end
 
-## modelos de onibus
-modelos_onibus = { "vision 2000": "Eterna Indústrias",
-  "AetherGlide": "Vanguard Motors",
-  "Stratos XL": "Horizon Transports",
-  "UrbanLink 50": "Cetro Veículos",
-  "Trilha Master": "Nômade Veículos"
+# =========================
+# 7. Modelos de ônibus
+# =========================
+puts "-> Criando modelos de ônibus..."
+modelos_onibus = {
+  "Vision 2000"   => "Eterna Indústrias",
+  "AetherGlide"   => "Vanguard Motors",
+  "Stratos XL"    => "Horizon Transports",
+  "UrbanLink 50"  => "Cetro Veículos",
+  "Trilha Master" => "Nômade Veículos"
 }
 
 modelos_onibus.each do |nome, fabricante|
   Modelo.find_or_create_by!(nome: nome, fabricante: fabricante)
 end
 
-
-
-puts "Seed finalizada."
+# =========================
+# Finalização
+# =========================
+puts "Seed finalizada com sucesso!"
