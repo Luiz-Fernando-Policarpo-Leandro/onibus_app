@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
-  attr_accessor :remember_token
+
 
   belongs_to :status
   belongs_to :role
@@ -34,4 +34,28 @@ class User < ApplicationRecord
   def self.new_token
     SecureRandom.urlsafe_base64
   end
+
+  def self.digest(token)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+    BCrypt::Password.create(token, cost: cost)
+  end
+
+  # save token
+  def remember
+    self.remember_token = User.new_token
+    update_column(:remember_digest, User.digest(remember_token)) # update in database
+  end
+
+  # check if the token is on the database
+  def authenticated?(token)
+    return false if remember_digest.nil?
+    BCrypt::Password.new(remember_digest).is_password?(token)
+  end
+
+  # erase in db
+  def forget
+    update_column(:remember_digest, nil)
+  end
+
+  attr_accessor :remember_token
 end

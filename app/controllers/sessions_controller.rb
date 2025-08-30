@@ -1,14 +1,21 @@
 class SessionsController < ApplicationController
   before_action :redirect_if_logged_in, only: [ :new ]
+  include SessionsHelper
+
   def new
-    # Renderiza o formulário de login
   end
 
   def create
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
+      log_in(user)
 
-      session[:user_id] = user.id # Armazena o ID do usuário na sessão
+      if params[:session][:remember_me] == "1"
+        remember(user)
+      else
+        forget(user)
+      end
+
       flash[:success] = "Login bem-sucedido!"
 
       redirect_to root_path
@@ -19,8 +26,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil # Limpa a sessão do usuário
+    log_out if logged_in?
     flash[:success] = "Logout realizado com sucesso."
-    redirect_to root_path, status: :see_other # Redireciona para a página inicial com status 303 (See Other)
+    redirect_to root_path, status: :see_other
   end
 end
