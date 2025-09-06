@@ -10,10 +10,12 @@ Atualmente, um dos problemas que afetam e prejudicam os estudantes universitári
 
 ## gems adicionadas
 * 'dotenv-rails' – Adiciona uma camada de segurança às variáveis de ambiente da aplicação quando executada em ambiente de desenvolvimento.
-* 'bcrypt' - Adicona criptografia para a parte das senhas.
-* 'rspec-rails' - Para testes e afins
+* 'bcrypt' - Adicona criptografia e segurança para o usuarios.
+* 'rspec-rails' - Para testes e
 
 Things you may want to cover:
+
+
 
 * Ruby version: ruby-3.4.4
 
