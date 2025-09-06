@@ -1,48 +1,130 @@
-# README
+# Ônibus App
 
 ## TCC
-Este é um projeto de faculdade desenvolvido para o meu Trabalho de Conclusão de Curso (TCC). Aqui, serão abordados temas como: segurança web, APIs e autenticação, sempre buscando ser o mais claro possível.
+
+Este projeto foi desenvolvido como parte do **Trabalho de Conclusão de Curso (TCC)**.
+O objetivo é abordar temas como **segurança web**, **APIs** e **autenticação**, seguindo boas práticas e buscando clareza no desenvolvimento.
 
 ## Meios de Transporte
+
 Atualmente, um dos problemas que afetam e prejudicam os estudantes universitários — além das notas, horários e disciplinas — é o transporte. Muitos estudantes são, majoritariamente, residentes de outros municípios, e em diversos estados brasileiros há carência de transporte público. Quando ele existe, frequentemente não há espaço suficiente, o que leva muitos alunos a irem a pé para a universidade.
 
+---
 
+## Gems Utilizadas
 
-## gems adicionadas
-* 'dotenv-rails' – Adiciona uma camada de segurança às variáveis de ambiente da aplicação quando executada em ambiente de desenvolvimento.
-* 'bcrypt' - Adicona criptografia e segurança para o usuarios.
-* 'rspec-rails' - Para testes e
+* `dotenv-rails` – Gerenciamento de variáveis de ambiente em desenvolvimento.
+* `bcrypt` – Criptografia e segurança para senhas de usuários.
+* `rspec-rails` – Framework de testes para a aplicação.
 
-Things you may want to cover:
+---
 
+## Configuração do Projeto
 
+### Dependências do Sistema
 
-* Ruby version: ruby-3.4.4
+* Ruby 3.4.4
+* Rails 8.0.2
+* MySQL
 
-* System dependencies
+### Instalação
 
-* Configuration
+```bash
+git clone https://github.com/Luiz-Fernando-Policarpo-Leandro/onibus_app.git
+cd onibus_app
+bundle install
+```
 
-* Database creation
+### Banco de Dados
 
-* Database initialization
+```bash
+rails db:create db:migrate
+```
 
-* How to run the test suite
+### Executando o Servidor
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+rails server
+```
 
-* Deployment instructions
+O aplicativo estará disponível em `http://localhost:3000`.
 
-* ...
+---
 
+## Testes
 
-fontes usadas para fazer a aplicação:
-https://dev.to/kjdowns/creating-a-user-login-system-ruby-on-rails-2kl2
+Para rodar a suíte de testes:
 
-https://guiarails.com.br/action_mailer_basics.html
+```bash
+bundle exec rspec
+```
 
-https://apidock.com/rails/v7.1.3.4/ActiveRecord/Persistence/update_columns
+---
 
-https://api.rubyonrails.org/classes/ActionController/Redirecting.html#method-i-redirect_back
+## Variáveis de Ambiente
 
-https://rspec.info/features/6-0/rspec-rails/request-specs/request-spec/
+Crie um arquivo **`.env`** na raiz do projeto com o seguinte conteúdo:
+
+```bash
+# Configuração do Banco de Dados
+MY_MYSQL_USER= "seu_usuario"
+MY_MYSQL_PASSWORD= "sua_senha"
+
+# Configuração do E-mail (Gmail)
+MY_EMAIL_APP= "seu_email@gmail.com"
+MY_PASSWORD_APP= "sua_app_password"
+```
+
+### Onde são usadas
+
+* **Banco de dados** → `config/database.yml`:
+
+```yml
+username: <%= ENV["MY_MYSQL_USER"] %>
+password: <%= ENV["MY_MYSQL_PASSWORD"] %>
+```
+
+* **E-mail** → `config/environments/development.rb`:
+
+```ruby
+config.action_mailer.smtp_settings = {
+  user_name: ENV["MY_EMAIL_APP"],
+  password:  ENV["MY_PASSWORD_APP"]
+}
+```
+
+**Observações importantes**:
+
+* Para usar Gmail, é necessário gerar uma **App Password** (senha de app) na conta Google. A senha normal não funciona.
+* Nunca suba o arquivo `.env` para o GitHub. Certifique-se de incluí-lo no `.gitignore`.
+
+---
+
+## Funcionalidades do Sistema
+
+### Usuários
+
+* Cadastro e login com autenticação segura.
+* Armazenamento de informações do usuário: CPF, CEP, matrícula, nome, role (função) e município.
+* Admins podem gerenciar usuários (CRUD), com restrições de segurança.
+
+### Sistema de Verificação
+
+* Envio de código de verificação por e-mail.
+
+### Ônibus e Rotas
+
+* Cadastro e atualização de ônibus e suas rotas.
+
+### Testes
+
+* Testes automatizados com RSpec.
+
+---
+
+## Referências
+
+* [Creating a User Login System - Ruby on Rails](https://dev.to/kjdowns/creating-a-user-login-system-ruby-on-rails-2kl2)
+* [Action Mailer Rails](https://guiarails.com.br/action_mailer_basics.html)
+* [RSpec Rails](https://rspec.info/features/6-0/rspec-rails/request-specs/request-spec/)
+
