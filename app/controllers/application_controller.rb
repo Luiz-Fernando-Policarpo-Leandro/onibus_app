@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
       redirect_to root_path
     elsif current_user.status.name == "waiting"
       flash[:danger] = "Você recebeu um código na sua caixa de email. Verifique, por favor."
-      redirect_to verification_path
+      redirect_to verification_path unless request.path == verification_path
     end
   end
 
