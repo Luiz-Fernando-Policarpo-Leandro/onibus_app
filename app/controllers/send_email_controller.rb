@@ -28,5 +28,4 @@ class SendEmailController < ApplicationController
       redirect_to homePage_path and return
     end
   end
-
 end
