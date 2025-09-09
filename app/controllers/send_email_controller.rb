@@ -1,8 +1,9 @@
 class SendEmailController < ApplicationController
+  before_action :require_user
   before_action :verify_status
 
-  def verification_email_code
 
+  def verification_email_code
     if params[:code].present?
 
       code_user = Verification.find_by(user_id: current_user.id).code_verification
@@ -17,15 +18,14 @@ class SendEmailController < ApplicationController
 
       flash[:danger] = "codigo de verificação incorreto"
       redirect_to verification_path
-
     end
   end
 
   private
 
   def verify_status
-    if current_user.status == "active"
-      redirect_to homePage_path
+    if current_user.status.name == "active"
+      redirect_to homePage_path and return
     end
   end
 
