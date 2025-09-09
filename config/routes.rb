@@ -39,6 +39,6 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
 
 
-  get "verification", to: "users#verification_email_code"
-  post "verification", to: "users#verification_email_code"
+  get "verification", to: "send_email#verification_email_code"
+  post "verification", to: "send_email#verification_email_code"
 end

@@ -41,6 +41,7 @@ class UsersController < ApplicationController
     @user.status_id = Status.find_by(name: "waiting").id # define estatus como "waiting"
 
     @user.municipio_id = user_params[:municipio_id]
+
     @user.build_verification(code_verification: SecureRandom.hex(4))
 
     if @user.save
@@ -112,6 +113,7 @@ class UsersController < ApplicationController
   def profileUser
     @user = current_user
   end
+
 
   private
 

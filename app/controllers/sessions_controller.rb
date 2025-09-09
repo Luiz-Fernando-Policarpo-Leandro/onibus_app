@@ -30,4 +30,6 @@ class SessionsController < ApplicationController
     flash[:success] = "Logout realizado com sucesso."
     redirect_to root_path, status: :see_other
   end
+
+
 end
