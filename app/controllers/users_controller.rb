@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
 
   # /users/:id/edit
+
   def edit
     if params[:id].present?
       just_admin_permission

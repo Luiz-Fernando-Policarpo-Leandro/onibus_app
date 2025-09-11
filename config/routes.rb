@@ -38,6 +38,9 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
+  get "reset-password", to: "send_email#reset_password"
+  post "reset-password", to: "send_email#reset_password", as: :resetPassword
+
 
   get "verification", to: "send_email#verification_email_code"
   post "verification", to: "send_email#verification_email_code"

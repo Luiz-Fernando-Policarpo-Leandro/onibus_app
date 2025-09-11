@@ -21,11 +21,15 @@ class SendEmailController < ApplicationController
     end
   end
 
+  def reset_password
+  end
+
   private
 
   def verify_status
-    if current_user.status.name == "active"
-      redirect_to homePage_path and return
-    end
+    # test password reset
+    # if current_user.status.name == "active"
+    #  redirect_to homePage_path and return
+    # end
   end
 end
