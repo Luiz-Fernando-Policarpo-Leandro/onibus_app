@@ -1,0 +1,16 @@
+<h1>digite a nova senha</h1>
+<%= form_with(scope: :password_reset, local: true) do |f| %>
+      <div class="field">
+     <%= f.label :password %>
+     <%= f.password_field :password, placeholder: "digite sua senha" %> <%# Added placeholder %>
+   </div>
+
+   <div class="field">
+     <%= f.label :password_confirmation, "Confirmação de Senha" %>
+     <%= f.password_field :password_confirmation, placeholder: "digite novamente" %> <%# Added placeholder %>
+   </div>
+
+   <div class="actions">
+     <%= f.submit yield(:button_text) || "Salvar" %>
+   </div>
+<% end %>

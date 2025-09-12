@@ -3,7 +3,6 @@ class UsersController < ApplicationController
   before_action :require_user, except: %i[new create]
   before_action :just_admin_permission, only: %i[ index show destroy ]
 
-
   # /users/:id/edit
 
   def edit
@@ -20,7 +19,7 @@ class UsersController < ApplicationController
       aluno_role = Role.find_by(nome: "aluno")
       @users = User.where(
         municipio_id: current_user.municipio_id,
-       role_id: aluno_role.id).order(:nome)
+        role_id: aluno_role.id).order(:nome)
     else
       @users = User.all.order(:nome)
     end

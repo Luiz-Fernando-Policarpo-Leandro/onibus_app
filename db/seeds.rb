@@ -15,7 +15,7 @@ end
 # 2. Status
 # =========================
 puts "-> Criando status de usuário..."
-%w[active block waiting].each do |status_name|
+[ "active", "block", "waiting", "reset password" ].each do |status_name|
   Status.find_or_create_by(name: status_name)
 end
 
