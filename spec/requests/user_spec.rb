@@ -17,7 +17,10 @@ RSpec.describe "Users", type: :request do
 
     it "redirect to home-page users authenticates" do
       routes_authenticate = routes[:free_authenticate_pages]
-      user_test = User.create(valid_user_attributes)
+      valid = valid_user_attributes
+      # valid[:password_confirmation] = "kdshksfsdfj"
+      user_test = User.create(valid)
+      puts valid
       post "/login", params: session_params_for(user_test)
 
       routes_authenticate.each do |link|

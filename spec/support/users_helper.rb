@@ -4,6 +4,7 @@ module AttributesHelper
       nome: "Commun Name",
       email: 'test@gmail.com',
       password: "HJtJ1232@",
+      password_confirmation: "HJtJ1232@",
       cpf: "12345678910",
       role_id: Role.find_or_create_by(nome: "aluno").id,
       status_id: Status.find_or_create_by(name: "active").id,

@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
 
-
   belongs_to :status
   belongs_to :role
   belongs_to :municipio
@@ -19,16 +18,22 @@ class User < ApplicationRecord
 
   validates :nome, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, presence: true, length: { minimum: 8 }, on: :create
+  validates :password, length: { minimum: 8 }, on: [ :create, :update ]
+  validate :password_complexity
 
   validates :cpf, presence: true, uniqueness: true
   validates :cep, presence: true
   validates :matricula, presence: true
 
 
+
+
+
   def admin?
     self.role.present? && self.role.nome == "admin"
   end
+
+
 
   # session autentication
   def self.new_token
@@ -58,4 +63,14 @@ class User < ApplicationRecord
   end
 
   attr_accessor :remember_token
+
+  private
+
+  def password_complexity
+    return if password.blank?
+
+    unless password =~ /[a-z]/ && password =~ /[A-Z]/ && password =~ /\d/ && password =~ /[^A-Za-z0-9]/
+      errors.add :password, "deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial"
+    end
+  end
 end
