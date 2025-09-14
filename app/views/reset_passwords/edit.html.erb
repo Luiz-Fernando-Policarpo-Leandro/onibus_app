@@ -1,6 +1,6 @@
 <h1>digite a nova senha</h1>
-<%= form_with(scope: :password_reset, local: true) do |f| %>
-      <div class="field">
+<%= form_with model: @user, url: password_reset_edit_path(token: params[:token]) do |f| %>
+    <div class="field">
      <%= f.label :password %>
      <%= f.password_field :password, placeholder: "digite sua senha" %> <%# Added placeholder %>
    </div>
@@ -11,6 +11,6 @@
    </div>
 
    <div class="actions">
-     <%= f.submit yield(:button_text) || "Salvar" %>
+     <%= f.submit yield(:button_text) || "Resetar senha" %>
    </div>
 <% end %>
