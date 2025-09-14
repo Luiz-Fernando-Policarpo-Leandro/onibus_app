@@ -1,4 +1,4 @@
-module AttributesHelper
+module UserHelper
   def valid_user_attributes
     {
       nome: "Commun Name",

@@ -8,7 +8,6 @@ class PasswordMailer < ApplicationMailer
     @user = params[:user]
     @token = params[:token]
     @url = password_reset_edit_url(token: @token)
-    mail(to: @user.email, subject: 'Redefinição de senha')
+    mail(to: @user.email, subject: "Redefinição de senha")
   end
-
 end
