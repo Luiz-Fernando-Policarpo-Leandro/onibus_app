@@ -10,6 +10,7 @@ class ResetPasswordsController < ApplicationController
   def edit
     if params[:token].present?
       user = User.find_signed(params[:token], purpose: "reset_passwords")
+
       unless user
         redirect_to login_path, alert: "Link inválido ou expirado" and return
       end
@@ -18,8 +19,8 @@ class ResetPasswordsController < ApplicationController
       redirect_to password_reset_edit_path and return
     end
 
-    @user = User.find_by(id: session[:reset_passwords_user_id])
-    unless @user
+    user = User.find_by(id: session[:reset_passwords_user_id])
+    unless user
       redirect_to login_path, alert: "Link inválido ou expirado"
     end
   end
