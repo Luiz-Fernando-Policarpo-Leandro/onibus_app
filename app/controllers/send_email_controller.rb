@@ -18,27 +18,15 @@ class SendEmailController < ApplicationController
 
     # user and the path
     @user = current_user
-    path_url = homePage_path
 
     # switch case
-    case @user.status.name
-    when "waiting"
-        status_active = Status.find_by(name: "active")
-        @user.update_column(:status_id, status_active.id)
-
-    when "reset password"
-        path_url = reset_password_path
+    if @user.status.name == "waiting"
+      status_active = Status.find_by(name: "active")
+      @user.update_column(:status_id, status_active.id)
     end
 
-    redirect_to path_url
+    redirect_to homePage_path
   end
 
   private
-
-  def verify_status
-    # test password reset
-    # if current_user.status.name == "active"
-    # redirect_to homePage_path and return
-    # end
-  end
 end

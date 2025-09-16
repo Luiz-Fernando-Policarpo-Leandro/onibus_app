@@ -4,13 +4,13 @@ module SessionsHelper
   end
 
   def remember(user)
-    user.remember
+    Users::Remember.new(user).call
     cookies.permanent.signed[:user_id] = user.id
     cookies.permanent[:remember_token] = user.remember_token
   end
 
   def forget(user)
-    user.forget
+    Users::Forget.new(user).call
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
   end
