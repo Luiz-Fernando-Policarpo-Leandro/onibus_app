@@ -126,6 +126,20 @@ modelos_onibus.each do |nome, fabricante|
 end
 
 # =========================
+# 8. Onibus
+# =========================
+puts "-> Criando ônibus... "
+rad = Random.new
+6.times do |_|
+  Onibus.find_or_create_by(
+    numero_onibus: rad.rand(1..9999),
+    capacidade_maxima: rad.rand(40..60),
+    modelo_id: rad.rand(1..5)
+    )
+end
+
+
+# =========================
 # Finalização
 # =========================
 puts "Seed finalizada com sucesso!"
