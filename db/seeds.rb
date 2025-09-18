@@ -130,13 +130,51 @@ end
 # =========================
 puts "-> Criando ônibus... "
 rad = Random.new
-6.times do |_|
+num_onibus = []
+6.times do |t|
   Onibus.find_or_create_by(
     numero_onibus: rad.rand(1..9999),
-    capacidade_maxima: rad.rand(40..60),
-    modelo_id: rad.rand(1..5)
+    capacidade_maxima: 40,
+    modelo_id: t + 1
     )
 end
+# =========================
+# 9. Rotas exemplo "paripueira e maceio"
+# =========================
+onibus = Onibus.all
+
+municipios_rota = [
+  Municipio.find_by(nome: "Maceió"),
+  Municipio.find_by(nome: "Paripueira")
+]
+
+def hora(h = 0)
+  unless h > 8 and h < 20
+    return h + 1
+  end
+  8
+end
+
+weekday_rota = Weekday.first
+
+onibus.each_with_index do |bus, idx|
+  bus.rotas.create!(
+    municipio_origem: municipios_rota[0],
+    horario_saida: Time.zone.parse("2025-09-17 #{hora}:49"),
+    municipio_destino: municipios_rota[1],
+    horario_chegada: Time.zone.parse("2025-09-17 #{hora}:49"),
+    weekday: weekday_rota
+  )
+
+  bus.rotas.create!(
+    municipio_origem: municipios_rota[1],
+    horario_saida: Time.zone.parse("2025-09-17 #{hora}:49"),
+    municipio_destino: municipios_rota[0],
+    horario_chegada: Time.zone.parse("2025-09-17 #{hora}:49"),
+    weekday: weekday_rota
+  )
+end
+
 
 
 # =========================
