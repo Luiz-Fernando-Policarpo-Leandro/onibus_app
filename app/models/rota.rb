@@ -16,25 +16,29 @@ class Rota < ApplicationRecord
   validate :origem_and_destino_scope_check
 
   def hour_check
-    if horario_saida && horario_chegada && horario_saida >= horario_chegada
+    if horario_saida >= horario_chegada
       errors.add(:horario_chegada, "deve ser maior que o horário de saída")
     end
   end
 
 
   def origem_and_destino_scope_check
-    return unless municipio_origem && municipio_destino && weekday && onibuses.any?
+    return unless onibuses.any?
 
-    onibuses.each do |bus|
-      overlap = Rota.joins(:onibuses)
-                    .where(onibuses: { id: bus.id })
-                    .where(municipio_origem: municipio_origem, municipio_destino: municipio_destino, weekday: weekday)
-                    .where("horario_saida < ? AND horario_chegada > ?", horario_chegada, horario_saida)
-                    .where.not(id: id)
 
-      if overlap.exists?
-        errors.add(:base, "O ônibus #{bus.numero_onibus} já possui uma rota que conflita com esse horário")
-      end
+    onibus_ids = onibuses.pluck(:id)
+
+
+  conflict = Rota.joins(:onibuses)
+                 .where(onibuses: { id: onibus_ids })
+                 .where(weekday: weekday)
+                 .where("horario_saida < ? AND horario_chegada > ?", horario_chegada, horario_saida)
+                 .where.not(id: id)
+                 .exists?
+
+
+    if conflict
+      errors.add(:base, "Já existe uma rota nesse intervalo de horário para um dos ônibus selecionados")
     end
   end
 end

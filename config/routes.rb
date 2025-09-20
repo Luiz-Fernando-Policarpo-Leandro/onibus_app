@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     patch "/", to: "users#update", as: :profile
     delete "Excluir", to: "users#destroy", as: :destroy
     put "/", to: "users#update"
-    get "/", to: "users#profileUser", as: :profileUser
+    get "/", to: "users#show", as: :profileUser
   end
 
   resources :schedules, only: %i[ index new create edit update show destroy ]

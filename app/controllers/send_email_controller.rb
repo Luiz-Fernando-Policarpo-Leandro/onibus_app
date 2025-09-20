@@ -1,7 +1,9 @@
 class SendEmailController < ApplicationController
   before_action :require_user
-  before_action :verify_status
 
+  def resending_email
+    # soon
+  end
 
   def verification_email_code
     # return if theres not a params
@@ -27,6 +29,4 @@ class SendEmailController < ApplicationController
 
     redirect_to homePage_path
   end
-
-  private
 end
