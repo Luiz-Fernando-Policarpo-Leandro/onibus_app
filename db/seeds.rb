@@ -158,7 +158,7 @@ end
 weekday_rota = Weekday.first
 
 onibus.each_with_index do |bus, idx|
-  bus.rotas.create!(
+  bus.rotas.find_or_create_by(
     municipio_origem: municipios_rota[0],
     horario_saida: Time.zone.parse("2025-09-17 #{hora}:49"),
     municipio_destino: municipios_rota[1],
@@ -166,7 +166,7 @@ onibus.each_with_index do |bus, idx|
     weekday: weekday_rota
   )
 
-  bus.rotas.create!(
+  bus.rotas.find_or_create_by(
     municipio_origem: municipios_rota[1],
     horario_saida: Time.zone.parse("2025-09-17 #{hora}:49"),
     municipio_destino: municipios_rota[0],
