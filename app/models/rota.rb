@@ -15,27 +15,25 @@ class Rota < ApplicationRecord
   validate :hour_check
   validate :origem_and_destino_scope_check
 
+  private
+
   def hour_check
     if horario_saida >= horario_chegada
       errors.add(:horario_chegada, "deve ser maior que o horário de saída")
     end
   end
 
-
   def origem_and_destino_scope_check
     return unless onibuses.any?
 
-
     onibus_ids = onibuses.pluck(:id)
 
-
-  conflict = Rota.joins(:onibuses)
+    conflict = Rota.joins(:onibuses)
                  .where(onibuses: { id: onibus_ids })
                  .where(weekday: weekday)
                  .where("horario_saida < ? AND horario_chegada > ?", horario_chegada, horario_saida)
                  .where.not(id: id)
                  .exists?
-
 
     if conflict
       errors.add(:base, "Já existe uma rota nesse intervalo de horário para um dos ônibus selecionados")

@@ -57,14 +57,21 @@ end
 # =========================
 # 5. Roles
 # =========================
+
 puts "-> Criando roles..."
-%w[admin aluno].each do |role_name|
+%w[admin aluno motorista].each do |role_name|
   Role.find_or_create_by(nome: role_name)
 end
 
 # =========================
-# 6. Usuários Admin
+# 6. Usuários
 # =========================
+dic_status_id = {
+  admin: Role.find_by(nome: "admin").id,
+  aluno: Role.find_by(nome: "aluno").id,
+  motorista: Role.find_by(nome: "motorista").id
+}
+
 puts "-> Criando usuários admin..."
 users_adm = [
   {
@@ -73,7 +80,7 @@ users_adm = [
     password: "@AdmPassword123",
     cep: cep_aleatorio("Maceió"),
     cpf: "12345678914",
-    role_id: Role.find_by(nome: "admin").id,
+    role_id: dic_status_id[:admin],
     municipio_id: Municipio.find_by(nome: "Maceió").id,
     matricula: "123456789",
     telefones: %w[82912345678 82987654321]
@@ -84,24 +91,57 @@ users_adm = [
     password: "@AdmPassword123",
     cep: cep_aleatorio("Cajueiro"),
     cpf: "12345678910",
-    role_id: Role.find_by(nome: "admin").id,
+    role_id: dic_status_id[:admin],
     municipio_id: Municipio.find_by(nome: "Cajueiro").id,
     matricula: "123456789",
     telefones: %w[82911223344]
   }
 ]
 
+puts "-> Criando motoristas"
+time_test_cnh = Time.zone.parse("#{Time.now.year + 5}-09-17")
+
+users_motorista = [
+    {
+    nome: "Gilberto",
+    email: "user_motorista@gmail.com",
+    password: "@AdmPassword123",
+    cep: cep_aleatorio("Maceió"),
+    cpf: "12345678917",
+    role_id: dic_status_id[:motorista],
+    municipio_id: Municipio.find_by(nome: "Maceió").id,
+    matricula: "123456789",
+    cnh: "123456789",
+    categoria_cnh: "D",
+    validade_cnh: time_test_cnh,
+    telefones: %w[82912345678 82987654321]
+  }
+]
+
+users = users_adm + users_motorista
+
 faculdades = Faculdade.order("RAND()").limit(users_adm.length)
 
-users_adm.each_with_index do |adm_attrs, idx|
-  telefones = adm_attrs.delete(:telefones)
 
-  user = User.find_or_initialize_by(email: adm_attrs[:email])
-  user.assign_attributes(adm_attrs.merge(status_id: Status.find_by(name: "active").id))
+users.each_with_index do |user_attrs, idx|
+  telefones = user_attrs.delete(:telefones)
+
+  # retirando coisas desnecessarias
+  motorista_attrs = user_attrs.slice(:cnh, :categoria_cnh, :validade_cnh)
+  user_attrs.except!(:cnh, :categoria_cnh, :validade_cnh)
+
+
+  user = User.find_or_initialize_by(email: user_attrs[:email])
+  user.assign_attributes(user_attrs.merge(status_id: Status.find_by(name: "active").id))
   user.save!
 
-  # Associa faculdade
-  user.faculdades << faculdades[idx] if faculdades[idx].present?
+  # Associa faculdade se for aluno
+  case user_attrs[:role_id]
+  when dic_status_id[:aluno]
+    user.faculdades << faculdades[idx] if faculdades[idx].present?
+  when dic_status_id[:motorista]
+    user.create_motorista(motorista_attrs)
+  end
 
   # Associa telefones
   telefones.each do |num|

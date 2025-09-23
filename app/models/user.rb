@@ -2,9 +2,11 @@ class User < ApplicationRecord
   attr_accessor :remember_token
   has_secure_password
 
-
   belongs_to :status
+
   belongs_to :role
+  has_one :motorista, dependent: :destroy
+
   belongs_to :municipio
 
   has_one :verification

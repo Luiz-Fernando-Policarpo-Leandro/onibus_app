@@ -75,6 +75,6 @@ class OnibusesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def onibus_params
       params.require(:onibus).permit(:numero_onibus, :modelo_id, :capacidade_maxima,
-        rotas_attributes: [ :id, :municipio_origem_id, :municipio_destino_id, :horario_saida, :horario_chegada, :weekday_id, :_destroy ])
+        rotas_attributes: [ :id, :motorista_id, :municipio_origem_id, :municipio_destino_id, :horario_saida, :horario_chegada, :weekday_id, :_destroy ])
     end
 end
