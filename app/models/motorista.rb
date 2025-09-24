@@ -3,7 +3,7 @@ class Motorista < ApplicationRecord
   belongs_to :user
 
   has_many :motorista_escalas, dependent: :destroy
-  has_many :escalas, through: :motorista_escalas, source: :escala_onibus
+  has_many :rotas, through: :motorista_escalas, source: :escala_onibus
 
   validates :user_id, presence: true, uniqueness: true
   validates :cnh, presence: true

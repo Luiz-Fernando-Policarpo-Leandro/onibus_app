@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_one :verification
 
   has_many :user_faculdade, dependent: :destroy
-  has_many :faculdades, through: :user_faculdade
+  has_many :faculdaded, through: :user_faculdade
 
   has_many :schedules, dependent: :destroy
   accepts_nested_attributes_for :schedules, allow_destroy: true
