@@ -5,12 +5,12 @@ class Rota < ApplicationRecord
 
   has_many :escala_onibuses
   has_many :onibuses, through: :escala_onibuses
+  has_many :motoristas, through: :escala_onibuses
 
   validates :weekday, presence: true
-  validates :municipio_origem, presence: true
-  validates :municipio_destino, presence: true
-  validates :horario_saida, presence: true
-  validates :horario_chegada, presence: true
+  validates :municipio_origem, :municipio_destino, presence: true
+  validates :horario_saida, :horario_chegada, presence: true
+
 
   validate :hour_check
   validate :origem_and_destino_scope_check

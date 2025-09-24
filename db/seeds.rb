@@ -115,6 +115,19 @@ users_motorista = [
     categoria_cnh: "D",
     validade_cnh: time_test_cnh,
     telefones: %w[82912345678 82987654321]
+  },
+  { nome: "João",
+    email: "joao_motorista@gmail.com",
+    password: "@PassWordMotorista456",
+    cep: cep_aleatorio("Rio de Janeiro"),
+    cpf: "98765432100",
+    role_id: dic_status_id[:motorista],
+    municipio_id: Municipio.find_by(nome: "Paripueira").id,
+    matricula: "987654321",
+    cnh: "987654321",
+    categoria_cnh: "D",
+    validade_cnh: time_test_cnh,
+    telefones: %w[21998765432 21912345678]
   }
 ]
 
@@ -168,18 +181,19 @@ end
 # =========================
 # 8. Onibus
 # =========================
-puts "-> Criando ônibus... "
+puts "-> Criando ônibus..."
 rad = Random.new
-num_onibus = []
+
 6.times do |t|
   Onibus.find_or_create_by(
     numero_onibus: rad.rand(1..9999),
     capacidade_maxima: 40,
     modelo_id: t + 1
-    )
+  )
 end
+
 # =========================
-# 9. Rotas exemplo "paripueira e maceio"
+# 9. Rotas exemplo "Paripueira e Maceió"
 # =========================
 onibus = Onibus.all
 
@@ -189,31 +203,47 @@ municipios_rota = [
 ]
 
 def hora(h = 0)
-  unless h > 8 and h < 20
+  unless h > 8 && h < 20
     return h + 1
   end
   8
 end
 
 weekday_rota = Weekday.first
+motoristas = Motorista.all
 
 onibus.each_with_index do |bus, idx|
-  bus.rotas.find_or_create_by(
+  motorista_choice = motoristas.sample
+
+  rota_ida = Rota.find_or_create_by(
     municipio_origem: municipios_rota[0],
-    horario_saida: Time.zone.parse("2025-09-17 #{hora}:49"),
     municipio_destino: municipios_rota[1],
-    horario_chegada: Time.zone.parse("2025-09-17 #{hora}:49"),
+    horario_saida: Time.zone.parse("2025-09-17 #{hora}:00"),
+    horario_chegada: Time.zone.parse("2025-09-17 #{hora + 1}:00"),
     weekday: weekday_rota
   )
 
-  bus.rotas.find_or_create_by(
+  rota_volta = Rota.find_or_create_by(
     municipio_origem: municipios_rota[1],
-    horario_saida: Time.zone.parse("2025-09-17 #{hora}:49"),
     municipio_destino: municipios_rota[0],
-    horario_chegada: Time.zone.parse("2025-09-17 #{hora}:49"),
+    horario_saida: Time.zone.parse("2025-09-17 #{hora}:00"),
+    horario_chegada: Time.zone.parse("2025-09-17 #{hora + 1}:00"),
     weekday: weekday_rota
   )
+
+  EscalaOnibus.find_or_create_by(
+    onibus: bus,
+    motorista: motorista_choice,
+    rota: rota_ida
+  )
+
+  EscalaOnibus.find_or_create_by(
+    onibus: bus,
+    motorista: motorista_choice,
+    rota: rota_volta
+  )
 end
+
 
 
 
