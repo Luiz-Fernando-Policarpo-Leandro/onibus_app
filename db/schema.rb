@@ -37,10 +37,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_201737) do
 
   create_table "motorista_escalas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "motorista_id", null: false
-    t.bigint "escala_onibuses_id", null: false
+    t.bigint "escala_onibus_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["escala_onibuses_id"], name: "index_motorista_escalas_on_escala_onibuses_id"
+    t.index ["escala_onibus_id"], name: "index_motorista_escalas_on_escala_onibus_id"
     t.index ["motorista_id"], name: "index_motorista_escalas_on_motorista_id"
   end
 
@@ -161,7 +161,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_201737) do
   add_foreign_key "escala_onibuses", "onibuses"
   add_foreign_key "escala_onibuses", "rota", column: "rota_id"
   add_foreign_key "faculdades", "municipios"
-  add_foreign_key "motorista_escalas", "escala_onibuses", column: "escala_onibuses_id"
+  add_foreign_key "motorista_escalas", "escala_onibuses"
   add_foreign_key "motorista_escalas", "motoristas"
   add_foreign_key "motoristas", "users"
   add_foreign_key "onibuses", "modelos"
