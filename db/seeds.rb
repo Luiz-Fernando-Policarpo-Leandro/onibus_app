@@ -230,22 +230,20 @@ onibus.each_with_index do |bus, idx|
     horario_chegada: Time.zone.parse("2025-09-17 #{hora + 1}:00"),
     weekday: weekday_rota
   )
+  if motorista_choice.id == 2
+    EscalaOnibus.find_or_create_by(
+      onibus: bus,
+      motorista: motorista_choice,
+      rota: rota_ida
+    )
 
-  EscalaOnibus.find_or_create_by(
-    onibus: bus,
-    motorista: motorista_choice,
-    rota: rota_ida
-  )
-
-  EscalaOnibus.find_or_create_by(
-    onibus: bus,
-    motorista: motorista_choice,
-    rota: rota_volta
-  )
+    EscalaOnibus.find_or_create_by(
+      onibus: bus,
+      motorista: motorista_choice,
+      rota: rota_volta
+    )
+  end
 end
-
-
-
 
 # =========================
 # Finalização

@@ -92,6 +92,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
 
   create_table "schedules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.bigint "weekday_id", null: false
     t.time "horario_saida", null: false
     t.time "horario_volta", null: false
     t.bigint "municipio_id", null: false
@@ -101,6 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
     t.index ["faculdade_id"], name: "index_schedules_on_faculdade_id"
     t.index ["municipio_id"], name: "index_schedules_on_municipio_id"
     t.index ["user_id"], name: "index_schedules_on_user_id"
+    t.index ["weekday_id"], name: "index_schedules_on_weekday_id"
   end
 
   create_table "statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -164,6 +166,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
   add_foreign_key "schedules", "faculdades"
   add_foreign_key "schedules", "municipios"
   add_foreign_key "schedules", "users"
+  add_foreign_key "schedules", "weekdays"
   add_foreign_key "user_faculdades", "faculdades"
   add_foreign_key "user_faculdades", "users"
   add_foreign_key "users", "municipios"
