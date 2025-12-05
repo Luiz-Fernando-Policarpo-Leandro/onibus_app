@@ -23,7 +23,6 @@ class ResetPasswordsController < ApplicationController
     unless user
       redirect_to login_path, alert: "Link inválido ou expirado"
     end
-
   end
 
   def update
