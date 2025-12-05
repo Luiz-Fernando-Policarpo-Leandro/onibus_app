@@ -48,7 +48,7 @@ class SchedulesController < ApplicationController
   private
 
   def set_schedule
-    @schedule = Schedule.find(params[:id]) if params[:id].present?
+    @schedule = Schedule.find_by(id: params[:id]) if params[:id].present?
   end
 
   def schedule_params

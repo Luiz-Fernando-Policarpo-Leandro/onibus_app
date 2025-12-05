@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   # /users/1
   def show
     if params[:id]
-      @user = User.find(params[:id])
+      @user = User.find_by(id: params[:id])
     else
       @user = current_user
     end
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
 
   def update
     if params[:id].present?
-      @user = User.find(params[:id])
+      @user = User.find_by(id: params[:id])
       unless current_user.admin? || @user == current_user
         flash[:danger] = "Você não tem permissão para realizar esta ação."
         redirect_to root_path and return
@@ -85,7 +85,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
     if admin_restriction
       if @user.destroy
         flash[:success] = "Usuário #{@user.nome} excluído com sucesso."

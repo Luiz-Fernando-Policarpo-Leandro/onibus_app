@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     if session[:user_id]
       @current_user ||= User.find_by(id: session[:user_id])
     elsif cookies.signed[:user_id]
-      user = User.find_by(id: cookies.signed[:user_id])
+      user = User.find_id(id: cookies.signed[:user_id])
       if Users::Authenticate.new(user, cookies[:remember_token]).call
         session[:user_id] = user.id
         @current_user = user
