@@ -128,3 +128,4 @@ config.action_mailer.smtp_settings = {
 * [Action Mailer Rails](https://guiarails.com.br/action_mailer_basics.html)
 * [RSpec Rails](https://rspec.info/features/6-0/rspec-rails/request-specs/request-spec/)
 
+# proxy_test
