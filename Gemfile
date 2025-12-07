@@ -70,3 +70,5 @@ end
 gem "cssbundling-rails"
 
 gem "sidekiq", "~> 8.0"
+
+gem "sidekiq-cron", "~> 2.3"

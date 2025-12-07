@@ -1,0 +1,14 @@
+concurrency: 5
+
+queues:
+  - critical
+  - default
+  - low
+
+use_cron_seconds: true
+
+schedule:
+  clean_up_users:
+    cron: "*/30 * * * *"
+    class: "CleanupExpiredEmailsJob"
+    queue: low
