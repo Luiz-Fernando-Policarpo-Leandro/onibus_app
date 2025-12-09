@@ -35,6 +35,7 @@ RSpec.describe "Users", type: :request do
         else
           follow_redirect!
           expect(response.body).to include("Você precisa estar logado para acessar a página.")
+
         end
       end
     end

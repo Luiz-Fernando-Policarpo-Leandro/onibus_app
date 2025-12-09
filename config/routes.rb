@@ -38,6 +38,11 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
+  # change email
+  get "change/email", to: "users#update_email"
+  patch "change/email", to: "users#update_email"
+
+  # verification
   get "verification", to: "send_email#verification_email_code"
   post "verification", to: "send_email#verification_email_code"
 

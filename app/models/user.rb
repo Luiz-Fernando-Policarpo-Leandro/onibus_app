@@ -22,7 +22,8 @@ class User < ApplicationRecord
 
   validates :nome, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, length: { minimum: 8 }, on: [ :create, :update ]
+  validates :password, length: { minimum: 8 }, if: -> { password.present? }
+
   validate :password_complexity
 
   validates :cpf, presence: true, uniqueness: true

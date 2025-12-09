@@ -1,0 +1,12 @@
+<h1>Alterar Email</h1>
+
+<%= form_with url: change_email_path, method: :patch do |f| %>
+
+  <div class="field">
+    <%= f.email_field :email, name: :email, placeholder: "Digite seu novo email" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Atualizar Email" %>
+  </div>
+<% end %>

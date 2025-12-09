@@ -84,6 +84,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_email
+    if params[:email].present?
+      if current_user.update(email: params[:email])
+        flash[:success] = "Email atualizado com sucesso"
+        redirect_to root_path
+      else
+        flash.now[:error] = "Erro ao atualizar email"
+        render :update_email, status: :unprocessable_entity
+      end
+    end
+  end
+
   def destroy
     @user = User.find_by(id: params[:id])
     if admin_restriction
@@ -93,10 +105,11 @@ class UsersController < ApplicationController
         flash[:danger] = "Não foi possível excluir o usuário #{@user.nome}."
       end
     else
-      flash[:danger] = "você não pode deletar alguem que não seja do seu municipio ou outro admin"
+      flash[:danger] = "você não pode deletar alguem que não seja do seu municipio ou outro administrador"
     end
     redirect_to users_path
   end
+
 
   private
 
