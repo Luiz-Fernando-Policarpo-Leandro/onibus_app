@@ -4,7 +4,7 @@ class SendEmailController < ApplicationController
   def resend_email
     user = params[:user] ? User.find(params[:user]) : current_user
 
-    ActiveRecord::Base.transaction do # just is true if every query is accept
+    ActiveRecord::Base.transaction do
       user.prepare_verification_code
       user.save!
     end
