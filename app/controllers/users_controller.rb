@@ -41,22 +41,18 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
-    @user.status_id = Status.find_by(name: "waiting").id # define estatus como "waiting"
+    result = Users::CreateUser.call(user_params)
 
-    @user.municipio_id = user_params[:municipio_id]
-
-    @user.build_verification(code_verification: SecureRandom.hex(4))
-
-    if @user.save
-      session[:user_id] = @user.id # o usuário é logado após o registro
-      VerificationMailer.with(user: @user).welcome_email.deliver_later
-      flash[:success] = "Bem-vindo ao app, #{@user.email}!"
+    if result.success?
+      session[:user_id] = result.user.id
+      flash[:success] = "Bem-vindo ao app, #{result.user.email}!"
       redirect_to root_path
     else
-      render "new", status: :unprocessable_entity
+      @user = result.user
+      render :new, status: :unprocessable_entity
     end
   end
+
 
   def update
     if params[:id].present?

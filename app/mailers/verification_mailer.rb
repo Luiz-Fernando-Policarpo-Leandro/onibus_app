@@ -1,7 +1,7 @@
 class VerificationMailer < ApplicationMailer
   def welcome_email
     @user = params[:user]
-    @code = Verification.find_by(user_id: @user.id)&.code_verification
+    @code = params[:code]
     mail(to: @user.email, subject: "Seu codigo de verificação")
   end
 end
