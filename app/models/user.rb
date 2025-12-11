@@ -54,6 +54,4 @@ class User < ApplicationRecord
         errors.add :password, "deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial"
       end
     end
-
-
 end

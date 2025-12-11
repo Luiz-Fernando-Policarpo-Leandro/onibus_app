@@ -1,6 +1,5 @@
 module Users
   class TokenGenerate
-    
     def self.new_token
       SecureRandom.urlsafe_base64
     end

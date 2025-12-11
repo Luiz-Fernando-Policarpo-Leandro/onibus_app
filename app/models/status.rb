@@ -8,5 +8,4 @@ class Status < ApplicationRecord
     def self.active
         find_by!(name: "active")
     end
-
 end
