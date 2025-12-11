@@ -1,12 +1,12 @@
-module Emails
-  class VerificationCode
+module Notifications
+  class SeedVerificationCodeEmail
     def self.call(user)
       new(user).call
     end
 
     def initialize(user)
       @user = user
-      @code = user.verification&.code_verification
+      @code = user.verification.code_verification
     end
 
     def call

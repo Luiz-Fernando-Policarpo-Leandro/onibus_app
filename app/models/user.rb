@@ -9,10 +9,10 @@ class User < ApplicationRecord
 
   belongs_to :municipio
 
-  has_one :verification
+  has_one :verification, dependent: :destroy
 
   has_many :user_faculdade, dependent: :destroy
-  has_many :faculdaded, through: :user_faculdade
+  has_many :faculdades, through: :user_faculdade
 
   has_many :schedules, dependent: :destroy
   accepts_nested_attributes_for :schedules, allow_destroy: true
@@ -32,17 +32,28 @@ class User < ApplicationRecord
 
 
 
-  def admin?
-    self.role.present? && self.role.nome == "admin"
-  end
-
-  private
-
-  def password_complexity
-    return if password.blank?
-
-    unless password =~ /[a-z]/ && password =~ /[A-Z]/ && password =~ /\d/ && password =~ /[^A-Za-z0-9]/
-      errors.add :password, "deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial"
+    def admin?
+      role&.nome == "admin"
     end
-  end
+
+    def prepare_verification_code
+      v = verification || build_verification
+      v.code_verification = SecureRandom.hex(4)
+      v
+    end
+
+    private
+
+    def password_complexity
+      return if password.blank?
+
+      unless password =~ /[a-z]/ &&
+            password =~ /[A-Z]/ &&
+            password =~ /\d/   &&
+            password =~ /[^A-Za-z0-9]/
+        errors.add :password, "deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial"
+      end
+    end
+
+
 end

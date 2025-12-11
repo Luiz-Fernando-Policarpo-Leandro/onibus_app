@@ -12,22 +12,16 @@ module Users
 
     def call
       user = User.new(@params)
+      user.status = Status.waiting
 
-      apply_defaults(user)
+      user.prepare_verification_code
 
       if user.save
-        Emails::VerificationCode.call(user)
+        Notifications::SeedVerificationCodeEmail.call(user)
         Result.new(true, user)
       else
         Result.new(false, user)
       end
-    end
-
-    private
-
-    def apply_defaults(user)
-      user.status = Status.waiting
-      user.build_verification(code_verification: SecureRandom.hex(4))
     end
   end
 end
