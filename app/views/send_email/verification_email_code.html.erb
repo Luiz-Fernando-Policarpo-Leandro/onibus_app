@@ -11,10 +11,8 @@
   <div class="form-group">
     <%= form.submit "Verificar", class: "btn btn-primary" %>
   </div>
+
 <% end %>
 
-<% if flash[:danger] %>
-  <div class="alert alert-danger"><%= flash[:danger] %></div>
-<% elsif flash[:success] %>
-  <div class="alert alert-success"><%= flash[:success] %></div>
-<% end %>
+<%= link_to "Reenviar Código", resend_email_path, method: :post %>
+

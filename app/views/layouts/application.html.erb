@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Meu App Autenticação</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+  <head>
+    <title>Meu App Autenticação</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  <%= javascript_importmap_tags %>
-</head>
-<body>
-  <%= render "layouts/header"%>
-  <% flash.each do |message_type, message| %>
-    <div class="flash <%= message_type %>">
-      <%= message %>
-    </div>
-  <% end %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
 
-  <%= yield %>
-</body>
+  <body>
+    <header>
+      <%= render "layouts/header" %>
+    </header>
+    <%= render "layouts/flash" %>
+
+    <main>
+      <%= yield %>
+    </main>
+  </body>
 </html>
