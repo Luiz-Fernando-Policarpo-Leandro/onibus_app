@@ -1,7 +1,9 @@
 class SendEmailController < ApplicationController
-  before_action :require_user, only: %i[ verification_email_code ]
+  before_action :require_user, except: [ :resend_email ]
 
   def resend_email
+    return root_path unless logged_in?
+
     user = params[:user] ? User.find(params[:user]) : current_user
 
     ActiveRecord::Base.transaction do
@@ -9,7 +11,7 @@ class SendEmailController < ApplicationController
       user.save!
     end
 
-    Notifications::SendVerificationCode.call(user)
+    Notifications::SeedVerificationCodeEmail.call(user)
 
     flash[:success] = "Código reenviado."
     redirect_to verification_path

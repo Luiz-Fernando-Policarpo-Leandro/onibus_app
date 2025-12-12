@@ -46,6 +46,9 @@ Rails.application.routes.draw do
   get "verification", to: "send_email#verification_email_code"
   post "verification", to: "send_email#verification_email_code"
 
+  get "resend-email", to: "send_email#resend_email"
+  post "resend-email", to: "send_email#resend_email"
+
   # reset password
   get "password/reset/", to: "reset_passwords#new"
   post "password/reset/", to: "reset_passwords#create"

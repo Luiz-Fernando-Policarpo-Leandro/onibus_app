@@ -1,9 +1,9 @@
 <% if object.errors.any? %>
-  <div id="error_explanation">
-    <h2><%= pluralize(object.errors.count, "erro") %> impediu que este item fosse salvo:</h2>
+  <div class="errors-box">
+    <h3>Corrija os seguintes problemas:</h3>
     <ul>
-      <% object.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+      <% object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
       <% end %>
     </ul>
   </div>
