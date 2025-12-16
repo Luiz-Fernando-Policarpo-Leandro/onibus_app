@@ -38,14 +38,11 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
-  # change email
-  get "change/email", to: "users#update_email"
-  patch "change/email", to: "users#update_email"
-
   # verification
   get "verification", to: "send_email#verification_email_code"
   post "verification", to: "send_email#verification_email_code"
 
+  # resend email
   get "resend-email", to: "send_email#resend_email"
   post "resend-email", to: "send_email#resend_email"
 
@@ -54,4 +51,8 @@ Rails.application.routes.draw do
   post "password/reset/", to: "reset_passwords#create"
   get "password/reset/edit", to: "reset_passwords#edit"
   patch "password/reset/edit", to: "reset_passwords#update"
+
+  # change email
+  get "change/email", to: "users#update_email"
+  patch "change/email", to: "users#update_email"
 end

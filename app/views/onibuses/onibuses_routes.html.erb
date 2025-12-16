@@ -1,4 +1,21 @@
-<p>bem vindo</p>
+<% content_for :head do %>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    defer>
+  </script>
+<% end %>
+
+
+<h1>Mapa de Rotas</h1>
+
+<div id="map" style="height: 600px; width: 100%;"></div>
+
+<%= javascript_import_module_tag "maps/onibuses_routes_map" %>
+
 
 <% if current_user.admin? %>
   <%= link_to 'Gerenciar Usuários', users_path %>

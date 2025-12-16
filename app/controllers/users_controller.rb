@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :redirect_if_logged_in, only: %i[ new ]
-  before_action :require_user, except: %i[new create]
+  before_action :require_user, except: %i[new create update_email]
   before_action :just_admin_permission, only: %i[ index show destroy ]
 
   # /users/:id/edit
@@ -81,8 +81,9 @@ class UsersController < ApplicationController
   end
 
   def update_email
+    return rediret_to root_path unless logged_in?
     if params[:email].present?
-      if current_user.update(email: params[:email])
+      if current_user.update_column(:email, params[:email])
         flash[:success] = "Email atualizado com sucesso"
         redirect_to root_path
       else
