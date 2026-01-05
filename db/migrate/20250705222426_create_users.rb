@@ -8,7 +8,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :cpf, null: false
       t.string :cep, null: false
 
-      t.string :matricula, null: false
+      t.string :matricula
 
       t.string :remember_digest
 

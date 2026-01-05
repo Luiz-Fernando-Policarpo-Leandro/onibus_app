@@ -1,4 +1,5 @@
 class Rota < ApplicationRecord
+  has_many :rota_trajetorias, dependent: :destroy
   belongs_to :municipio_origem, class_name: "Municipio", foreign_key: "municipio_origem_id"
   belongs_to :municipio_destino, class_name: "Municipio", foreign_key: "municipio_destino_id"
   belongs_to :weekday
@@ -14,6 +15,10 @@ class Rota < ApplicationRecord
 
   validate :hour_check
   validate :origem_and_destino_scope_check
+
+  def trajetoria_atual
+    rota_trajetorias.order(created_at: :desc).first
+  end
 
   private
 
@@ -39,4 +44,7 @@ class Rota < ApplicationRecord
       errors.add(:base, "Já existe uma rota nesse intervalo de horário para um dos ônibus selecionados")
     end
   end
+
+
+
 end

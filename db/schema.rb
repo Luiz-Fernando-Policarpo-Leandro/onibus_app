@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_05_034933) do
   create_table "escala_onibuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "onibus_id", null: false
     t.bigint "rota_id", null: false
@@ -49,6 +49,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
 
   create_table "municipios", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "nome", null: false
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -90,6 +92,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
     t.index ["weekday_id"], name: "index_rota_on_weekday_id"
   end
 
+  create_table "rota_trajetorias", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "rota_id", null: false
+    t.json "geom"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rota_id"], name: "index_rota_trajetorias_on_rota_id"
+  end
+
   create_table "schedules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "weekday_id", null: false
@@ -126,7 +136,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
     t.string "nome", null: false
     t.string "cpf", null: false
     t.string "cep", null: false
-    t.string "matricula", null: false
+    t.string "matricula"
     t.string "remember_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -163,6 +173,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_24_213426) do
   add_foreign_key "rota", "municipios", column: "municipio_destino_id"
   add_foreign_key "rota", "municipios", column: "municipio_origem_id"
   add_foreign_key "rota", "weekdays"
+  add_foreign_key "rota_trajetorias", "rota", column: "rota_id"
   add_foreign_key "schedules", "faculdades"
   add_foreign_key "schedules", "municipios"
   add_foreign_key "schedules", "users"

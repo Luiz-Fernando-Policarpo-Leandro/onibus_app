@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "onibuses#home"
 
-  get "/home-page", to: "onibuses#onibuses_routes", as: :homePage
+  get "/home-page", to: "rota#trajetoria", as: :homePage
 
 
   resources :users, only: [ :index, :edit, :update, :show, :destroy ]
@@ -26,6 +26,13 @@ Rails.application.routes.draw do
   end
 
   resources :schedules, only: %i[ index new create edit update show destroy ]
+
+  resources :rota, only: [] do
+    member do
+      get :trajetoria
+    end
+  end
+
 
 
   get "schedule", to: "schedules#schedule_user", as: :scheduleUser
@@ -55,4 +62,5 @@ Rails.application.routes.draw do
   # change email
   get "change/email", to: "users#update_email"
   patch "change/email", to: "users#update_email"
+
 end

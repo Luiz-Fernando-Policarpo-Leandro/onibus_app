@@ -9,13 +9,15 @@
   </script>
 <% end %>
 
-
 <h1>Mapa de Rotas</h1>
 
-<div id="map" style="height: 600px; width: 100%;"></div>
+<div
+  id="map"
+  data-rota-id="<%= @rota.id %>"
+  style="height: 600px; width: 100%;">
+</div>
 
 <%= javascript_import_module_tag "maps/onibuses_routes_map" %>
-
 
 <% if current_user.admin? %>
   <%= link_to 'Gerenciar Usuários', users_path %>

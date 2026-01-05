@@ -3,7 +3,7 @@
 <%= form_with(scope: :session, url: login_path, local: true) do |f| %>
   <div class="field">
     <%= f.label :email %>
-    <%= f.email_field :email %>
+    <%= f.email_field :email, value: "adm@gmail.com" %>
   </div>
 
   <div class="field">

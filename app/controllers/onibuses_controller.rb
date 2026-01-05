@@ -7,9 +7,6 @@ class OnibusesController < ApplicationController
   def home
   end
 
-  def onibuses_routes
-  end
-
   # GET /onibuses or /onibuses.json
   def index
     @onibuses = Onibus.all
