@@ -44,7 +44,4 @@ class Rota < ApplicationRecord
       errors.add(:base, "Já existe uma rota nesse intervalo de horário para um dos ônibus selecionados")
     end
   end
-
-
-
 end

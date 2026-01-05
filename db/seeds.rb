@@ -85,7 +85,7 @@ def cep_por_municipio(nome)
     "Maceió"     => %w[57000000 57035000 57038000],
     "Cajueiro"   => %w[57770000 57771000],
     "Paripueira" => %w[57935000]
-  }.fetch(nome, ["57000000"]).sample
+  }.fetch(nome, [ "57000000" ]).sample
 end
 
 usuarios = [
@@ -137,9 +137,9 @@ end
 # =====================================================
 puts "-> Criando modelos de ônibus..."
 [
-  ["Vision 2000", "Eterna"],
-  ["UrbanLink 50", "Cetro"],
-  ["Stratos XL", "Horizon"]
+  [ "Vision 2000", "Eterna" ],
+  [ "UrbanLink 50", "Cetro" ],
+  [ "Stratos XL", "Horizon" ]
 ].each do |nome, fabricante|
   Modelo.find_or_create_by!(nome: nome, fabricante: fabricante)
 end

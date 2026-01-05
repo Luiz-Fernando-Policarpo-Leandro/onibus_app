@@ -62,5 +62,4 @@ Rails.application.routes.draw do
   # change email
   get "change/email", to: "users#update_email"
   patch "change/email", to: "users#update_email"
-
 end
