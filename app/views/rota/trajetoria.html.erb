@@ -1,21 +1,18 @@
 <% content_for :head do %>
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    defer>
-  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map { 
+      height: 500px; 
+      width: 100%;
+      z-index: 1;
+    }
+  </style>
 <% end %>
 
-<h1>Mapa da Rota</h1>
+<div class="container">
+  <h1>Mapa da Rota</h1>
+  <div id="map"></div>
+</div>
 
-<div
-  id="map"
-  data-rota-id= < @rota.id >
-
-  style="height: 500px;"
-></div>
-
-<%= javascript_import_module_tag "maps/onibuses_routes_map" %>
+<%= javascript_include_tag "maps/onibuses_routes_map" %>

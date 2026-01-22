@@ -27,11 +27,9 @@ Rails.application.routes.draw do
 
   resources :schedules, only: %i[ index new create edit update show destroy ]
 
-  resources :rota, only: [] do
-    member do
-      get :trajetoria
-    end
-  end
+  resources :rota, only: [:show]
+  get "/rota/:id/trajetoria", to: "rota#trajetoria", as: :rota_trajetoria
+
 
 
 

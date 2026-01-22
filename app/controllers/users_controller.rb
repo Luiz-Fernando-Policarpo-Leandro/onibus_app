@@ -81,7 +81,7 @@ class UsersController < ApplicationController
   end
 
   def update_email
-    return rediret_to root_path unless logged_in?
+    return redirect_to root_path unless logged_in?
     if params[:email].present?
       if current_user.update_column(:email, params[:email])
         flash[:success] = "Email atualizado com sucesso"
