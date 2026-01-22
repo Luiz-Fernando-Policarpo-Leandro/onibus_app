@@ -2,8 +2,7 @@ class RotaController < ApplicationController
   before_action :set_rota, only: %i[show trajetoria]
   
   def show
-    @rota = Rota.find(params[:id])
-    render :trajetoria
+    #render :trajetoria
   end
   
   def trajetoria
@@ -18,6 +17,6 @@ class RotaController < ApplicationController
   private
 
   def set_rota
-    @rota = Rota.find(params[:id])
+    @rota ||= Rota.find(params[:id])
   end
 end

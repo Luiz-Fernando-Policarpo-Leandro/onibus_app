@@ -31,10 +31,7 @@ Rails.application.routes.draw do
   get "/rota/:id/trajetoria", to: "rota#trajetoria", as: :rota_trajetoria
 
 
-
-
   get "schedule", to: "schedules#schedule_user", as: :scheduleUser
-
 
   # autentication
   get "signup", to: "users#new"
