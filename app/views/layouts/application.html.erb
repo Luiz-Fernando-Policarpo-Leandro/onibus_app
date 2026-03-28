@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
-    <title>Meu App Autenticação</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alagoas Transportes</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,18 +12,51 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
+    <style>
+      :root {
+        --primary-color: #0d6efd;
+        --secondary-color: #6c757d;
+        --success-color: #198754;
+        --danger-color: #dc3545;
+        --warning-color: #ffc107;
+        --info-color: #0dcaf0;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+      }
 
+      * {
+        transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+      }
+
+      main {
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+      }
+    </style>
   </head>
   
-
-  <body>
+  <body class="d-flex flex-column">
     <header>
       <%= render "layouts/header" %>
     </header>
-    <%= render "layouts/flash" %>
 
-    <main>
-      <%= yield %>
+    <main class="flex-grow-1">
+      <%= render "layouts/flash" %>
+      <div class="container-fluid">
+        <%= yield %>
+      </div>
     </main>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <p class="mb-0">&copy; 2024 Alagoas Transportes. Todos os direitos reservados.</p>
+      </div>
+    </footer>
   </body>
 </html>

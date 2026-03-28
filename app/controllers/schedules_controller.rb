@@ -52,6 +52,6 @@ class SchedulesController < ApplicationController
   end
 
   def schedule_params
-    params.require(:schedule).permit(:user_id, :horario_saida, :horario_volta, :municipio_id, :faculdade_id)
+    params.require(:schedule).permit(:user_id, :horario_saida, :horario_volta, :municipio_id, :faculdade_id, :weekday_id)
   end
 end

@@ -1,37 +1,124 @@
-<h1>Gerenciar Usuários</h1>
+<div class="container-lg py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="h2 fw-bold text-dark mb-3">
+        <i class="bi bi-people-fill"></i>
+        Gerenciar Usuários
+      </h1>
+      
+      <!-- Action Buttons -->
+      <div class="btn-group gap-2 flex-wrap" role="group">
+        <%= link_to 'Ver Alunos do Meu Município', users_path(filter_by_municipio: true), class: 'btn btn-info text-white' %>
+        <%= link_to 'Ver Todos os Usuários', users_path, class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
 
-<%= link_to 'Ver Alunos do Meu Município', users_path(filter_by_municipio: true), class: 'btn btn-primary' %>
-<%= link_to 'Ver Todos os Usuários', users_path, class: 'btn btn-secondary' %>
-<hr>
-
-<% if @users.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Função</th>
-        <th>Status</th>
-        <th colspan="3">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-        <% next if user == current_user%>
-        <tr>
-          <td><%= user.nome %></td>
-          <td><%= user.email %></td>
-          <td><%= user.role.nome if user.role %></td>
-          <td><%= user.status.name if user.status %></td>
-          <td><%= link_to 'Visualizar', user_path(user) %></td> <%# Link para a página de visualização do usuário %>
-          <td><%= link_to 'Editar', edit_user_path(user) %></td> <%# Link para a edição do usuário %>
-          <td><%= link_to 'Excluir', user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este usuário?' } %>
-        </tr>
+  <!-- Users Table -->
+  <div class="row">
+    <div class="col-12">
+      <% if @users.any? %>
+        <div class="table-responsive shadow-sm rounded-3" style="overflow: hidden;">
+          <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+              <tr>
+                <th class="fw-bold">Nome</th>
+                <th class="fw-bold">Email</th>
+                <th class="fw-bold">Função</th>
+                <th class="fw-bold">Status</th>
+                <th class="fw-bold text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @users.each do |user| %>
+                <% next if user == current_user %>
+                <tr class="align-middle">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                        <%= user.nome[0].upcase %>
+                      </div>
+                      <strong><%= user.nome %></strong>
+                    </div>
+                  </td>
+                  <td>
+                    <small class="text-secondary"><%= user.email %></small>
+                  </td>
+                  <td>
+                    <span class="badge bg-info text-dark">
+                      <%= user.role.nome if user.role %>
+                    </span>
+                  </td>
+                  <td>
+                    <% status_class = user.status&.name&.downcase == 'ativo' ? 'bg-success' : 'bg-secondary' %>
+                    <span class="badge <%= status_class %>">
+                      <%= user.status.name if user.status %>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center gap-2">
+                      <%= link_to '', user_path(user), class: 'btn btn-sm btn-outline-primary', title: 'Visualizar' do %>
+                        <i class="bi bi-eye"></i>
+                      <% end %>
+                      
+                      <%= link_to '', edit_user_path(user), class: 'btn btn-sm btn-outline-warning', title: 'Editar' do %>
+                        <i class="bi bi-pencil"></i>
+                      <% end %>
+                      
+                      <%= link_to '', user_path(user), method: :delete, data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este usuário?' }, class: 'btn btn-sm btn-outline-danger', title: 'Excluir' do %>
+                        <i class="bi bi-trash"></i>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert alert-info d-flex align-items-center rounded-3" role="alert">
+          <i class="bi bi-info-circle me-2"></i>
+          <div>
+            Nenhum usuário cadastrado ainda. <strong>Comece criando o primeiro!</strong>
+          </div>
+        </div>
       <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>Nenhum usuário cadastrado.</p>
-<% end %>
+    </div>
+  </div>
 
-<%= link_to 'Voltar', root_path %>
+  <!-- Footer Navigation -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <nav aria-label="Navegação">
+        <%= link_to "← Voltar", root_path, class: "btn btn-outline-secondary" %>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<style>
+  .table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05) !important;
+  }
+
+  .badge {
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .table-responsive {
+      font-size: 0.875rem;
+    }
+
+    .btn-group {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -11,6 +11,12 @@
   <% end %>
 
   <div class="field">
+    <%= form.label :weekday_id %>
+    <%= form.collection_select :weekday_id, Weekday.all, :id, :name,  prompt: "selecione um dia da semana" %>
+  
+  </div>
+
+  <div class="field">
     <%= form.label :horario_saida %>
     <%= form.time_field :horario_saida %>
   </div>

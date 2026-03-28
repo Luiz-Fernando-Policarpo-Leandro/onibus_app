@@ -1,10 +1,9 @@
 class RotaController < ApplicationController
   before_action :set_rota, only: %i[show trajetoria]
-  
+
   def show
-    #render :trajetoria
   end
-  
+
   def trajetoria
     begin
       trajetoria = Rotas::OpenRouteService.gerar_trajetoria!(@rota)
@@ -17,6 +16,7 @@ class RotaController < ApplicationController
   private
 
   def set_rota
-    @rota ||= Rota.find(params[:id])
+    params_id = params[:id] ? params[:id] : 1
+    @rota = Rota.find(params_id)
   end
 end

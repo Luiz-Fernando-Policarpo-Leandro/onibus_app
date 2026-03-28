@@ -1,7 +1,54 @@
-<header>
-    <h1>Alagoas transportes</h1>
-    <%if logged_in?%>
-    <p><%= link_to "Profile", profileUser_path %><p>
-    <p><%= link_to "Agendar", scheduleUser_path%></p>
-    <%end%>
-</header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="/">
+      <i class="bi bi-bus-front"></i>
+      Alagoas Transportes
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <% if logged_in? %>
+          <li class="nav-item">
+            <%= link_to "Agendamentos", scheduleUser_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Perfil", profileUser_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+              <i class="bi bi-box-arrow-right"></i> Sair
+            </a>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "Login", login_path, class: "nav-link" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<% if logged_in? %>
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Fazer logout?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Você tem certeza que deseja sair?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <%= link_to "Sair", logout_path, method: :delete, class: "btn btn-danger" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,75 +1,178 @@
 <%= javascript_include_tag 'controllers/phones' %>
 <%= render 'shared/error_messages', object: f.object %>
 
-<div class="field">
-  <%= f.label :nome, "Nome Completo" %>
-  <%= f.text_field :nome%>
-</div>
+<div class="container-lg">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+          
+          <!-- Personal Information Section -->
+          <div class="mb-4">
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-person-fill"></i>
+              Informações Pessoais
+            </h5>
 
-<div class="field">
-  <%= f.label :email %>
-  <%= f.email_field :email%>
-</div>
+            <!-- Nome Completo -->
+            <div class="mb-3">
+              <%= f.label :nome, "Nome Completo", class: "form-label fw-500" %>
+              <%= f.text_field :nome, class: "form-control form-control-lg rounded-3", placeholder: "Seu nome completo", required: true %>
+            </div>
 
-<div class="field">
-  <%= f.label :cpf %>
-  <%= f.text_field :cpf%>
-</div>
+            <!-- Email -->
+            <div class="mb-3">
+              <%= f.label :email, "Email", class: "form-label fw-500" %>
+              <%= f.email_field :email, class: "form-control form-control-lg rounded-3", placeholder: "seu@email.com", required: true %>
+            </div>
 
-<div class="field">
-  <%= f.label :matricula %>
-  <%= f.text_field :matricula%>
-</div>
+            <!-- CPF -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <%= f.label :cpf, "CPF", class: "form-label fw-500" %>
+                <%= f.text_field :cpf, class: "form-control form-control-lg rounded-3", placeholder: "000.000.000-00" %>
+              </div>
 
-<div class="field">
-  <%= f.label :cep %>
-  <%= f.text_field :cep%>
-</div>
+              <!-- Matrícula -->
+              <div class="col-md-6 mb-3">
+                <%= f.label :matricula, "Matrícula", class: "form-label fw-500" %>
+                <%= f.text_field :matricula, class: "form-control form-control-lg rounded-3", placeholder: "Seu número de matrícula" %>
+              </div>
+            </div>
+          </div>
 
-<div class="field">
-  <%= f.label :municipio_id, "Município" %>
-  <%= f.collection_select :municipio_id, Municipio.all, :id, :nome, prompt: "Selecione o município" %>
-</div>
+          <!-- Address Section -->
+          <div class="mb-4">
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-geo-alt-fill"></i>
+              Localização
+            </h5>
 
-<div class="field">
-  <%= f.label :role_id, "Tipo de Usuário" %>
-  <%= f.collection_select :role_id, Role.all, :id, :nome, prompt: "Selecione a função" %>
-</div>
+            <!-- CEP -->
+            <div class="mb-3">
+              <%= f.label :cep, "CEP", class: "form-label fw-500" %>
+              <%= f.text_field :cep, class: "form-control form-control-lg rounded-3", placeholder: "00000-000" %>
+            </div>
 
-<div class="field">
-  <%= f.label :password %>
-  <%= f.password_field :password, placeholder: "Deixe em branco para não alterar" %> <%# Added placeholder %>
-</div>
+            <!-- Município -->
+            <div class="mb-3">
+              <%= f.label :municipio_id, "Município", class: "form-label fw-500" %>
+              <%= f.collection_select :municipio_id, Municipio.all, :id, :nome, { prompt: "Selecione o município" }, class: "form-select form-select-lg rounded-3" %>
+            </div>
+          </div>
 
-<div class="field">
-  <%= f.label :password_confirmation, "Confirmação de Senha" %>
-  <%= f.password_field :password_confirmation, placeholder: "Deixe em branco para não alterar" %> <%# Added placeholder %>
-</div>
+          <!-- Access Section -->
+          <div class="mb-4">
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-shield-lock"></i>
+              Acesso
+            </h5>
 
-<div id="phones">
+            <!-- Tipo de Usuário -->
+            <div class="mb-3">
+              <%= f.label :role_id, "Tipo de Usuário", class: "form-label fw-500" %>
+              <%= f.collection_select :role_id, Role.all, :id, :nome, { prompt: "Selecione a função" }, class: "form-select form-select-lg rounded-3" %>
+            </div>
 
-  <%= f.fields_for :phones do |phone_fields| %>
-    <div class="nested-fields field">
-      <%= phone_fields.label :number, "Número do Telefone" %>
-      <%= phone_fields.text_field :number, class: "phone-input" %>
-      <%= phone_fields.hidden_field :_destroy, value: phone_fields.object.new_record? ? nil : 0, class: 'destroy-field' %>
-      <%= phone_fields.hidden_field :id %>
-      <a href="#" class="remove-phone">Remover</a>
+            <!-- Senha -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <%= f.label :password, "Senha", class: "form-label fw-500" %>
+                <%= f.password_field :password, class: "form-control form-control-lg rounded-3", placeholder: "Deixe em branco para não alterar" %>
+              </div>
+
+              <!-- Confirmação de Senha -->
+              <div class="col-md-6 mb-3">
+                <%= f.label :password_confirmation, "Confirmar Senha", class: "form-label fw-500" %>
+                <%= f.password_field :password_confirmation, class: "form-control form-control-lg rounded-3", placeholder: "Deixe em branco para não alterar" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phones Section -->
+          <div class="mb-4">
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-telephone-fill"></i>
+              Telefones
+            </h5>
+
+            <div id="phones" class="mb-3">
+              <%= f.fields_for :phones do |phone_fields| %>
+                <div class="nested-fields input-group mb-2">
+                  <%= phone_fields.text_field :number, class: "form-control form-control-lg rounded-3 phone-input", placeholder: "Número do telefone" %>
+                  <%= phone_fields.hidden_field :_destroy, value: phone_fields.object.new_record? ? nil : 0, class: 'destroy-field' %>
+                  <%= phone_fields.hidden_field :id %>
+                  <button type="button" class="btn btn-outline-danger remove-phone">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              <% end %>
+            </div>
+
+            <button type="button" id="add-phone" class="btn btn-sm btn-outline-success">
+              <i class="bi bi-plus-circle"></i>
+              Adicionar Telefone
+            </button>
+          </div>
+
+          <!-- Hidden Template for New Phones -->
+          <div id="phone-template" style="display: none;">
+            <div class="nested-fields input-group mb-2">
+              <input type="text" name="user[phones_attributes][NEW_INDEX][number]" class="form-control form-control-lg rounded-3 phone-input" placeholder="Número do telefone" />
+              <input type="hidden" name="user[phones_attributes][NEW_INDEX][_destroy]" value="0" class="destroy-field" />
+              <button type="button" class="btn btn-outline-danger remove-phone">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 mt-4">
+            <%= f.submit yield(:button_text) || "Salvar Alterações", class: "btn btn-primary btn-lg rounded-3 fw-bold" %>
+          </div>
+        </div>
+      </div>
     </div>
-  <% end %>
-</div>
-
-<%= link_to "Adicionar Telefone", "#", id: "add-phone" %>
-
-<div id="phone-template" style="display: none;">
-  <div class="nested-fields field">
-    <label for="user_phones_attributes_NEW_INDEX_number">Número do Telefone</label>
-    <input type="text" name="user[phones_attributes][NEW_INDEX][number]" id="user_phones_attributes_NEW_INDEX_number" class="phone-input" />
-    <input type="hidden" name="user[phones_attributes][NEW_INDEX][_destroy]" value="0" class="destroy-field" />
-    <a href="#" class="remove-phone">Remover</a>
   </div>
 </div>
 
-<div class="actions">
-  <%= f.submit yield(:button_text) || "Salvar" %>
-</div>
+<style>
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+  }
+
+  .form-control-lg,
+  .form-select-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .rounded-3 {
+    border-radius: 0.75rem !important;
+  }
+
+  .rounded-4 {
+    border-radius: 1.5rem !important;
+  }
+
+  .input-group .btn {
+    border-color: var(--primary-color);
+  }
+
+  .nested-fields {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

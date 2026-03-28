@@ -1,28 +1,28 @@
 <h1>Minha Agenda</h1>
 <% if @schedules.any? %>
-  <table>
+  <table class="list-table" >
     <thead>
       <tr>
+      <th></th>
+      <th></th>
+      <th></th>
         <th>Faculdade</th>
         <th>Município</th>
         <th>Horário de Saída</th>
         <th>Horário de Volta</th>
-        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
       <% @schedules.each do |schedule| %>
         <tr>
+          <td><%= link_to '<i class="bi bi-pen-fill"></i>'.html_safe, edit_schedule_path(schedule) %></td>
+          <td><%= link_to '<i class="bi bi-eye"></i>'.html_safe, schedule_path(schedule) %></td>
+          <td><%= link_to '<i class="bi bi-trash"></i>'.html_safe, schedule_path(schedule), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este usuário?' } %></td>
           <td><%= schedule.faculdade.nome %></td>
           <td><%= schedule.municipio.nome %></td>
           <td><%= schedule.horario_saida.strftime("%H:%M") %></td>
           <td><%= schedule.horario_volta.strftime("%H:%M") %></td>
-          <td>
-            <%= link_to "Editar", edit_schedule_path(schedule) %>
-            <%= link_to "Mostrar", schedule_path(schedule) %>
-            <%= link_to "Excluir", schedule_path(schedule), data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este usuário?' } %>
 
-          </td>
         </tr>
       <% end %>
     </tbody>

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "onibuses#home"
 
-  get "/home-page", to: "rota#trajetoria", as: :homePage
+  #get "/home-page", to: "", as: :homePage
 
 
   resources :users, only: [ :index, :edit, :update, :show, :destroy ]
